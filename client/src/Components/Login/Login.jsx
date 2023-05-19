@@ -3,6 +3,7 @@ import { auth, provider } from '../../firebase/firebase';
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 function Login() {
+  // throw new Error('kolla')
   const navigate = useNavigate()
 // login function
   const signInWithGoogle = () => {
@@ -14,8 +15,8 @@ function Login() {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
+            console.log(user.displayName+" signed in");
             // IdP data available using getAdditionalUserInfo(result)
-            // ...
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
@@ -24,7 +25,6 @@ function Login() {
             const email = error.customData.email;
             // The AuthCredential type that was used.
             const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
         });
 }
   return (

@@ -1,30 +1,21 @@
 import {
   BrowserRouter,
-  RouterProvider, Route, Routes
+  Route, Routes
 } from "react-router-dom";
 import Home from './Pages/Home'
-import { useRouteError } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Login from "./Components/Login/Login";
-import Errorelement from "./Components/ErrorElement/Error-element";
+import Errorelement from "./Components/ErrorElement/Errorelement";
 import Blogs from "./Components/Blogs/Blogs";
+import Newblog from "./Components/NewBlog/Newblog";
 function App() {
-
-  // const [message, setMessage] = useState("");
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/message")
-  //     .then((res) => res.json())
-  //     .then((data) => {setMessage(data.message)
-  //     console.log(data.message);});
-  // }, []);
-
   return (
     <BrowserRouter>
       <Routes>
 
         <Route path="/" element={<Home></Home>} errorElement={<Errorelement></Errorelement>}>
-           <Route path="/login" element={<Login></Login>} errorElement={<Errorelement></Errorelement>}></Route>
-           <Route index element={<Blogs></Blogs>}></Route>
+          <Route path="/login" element={<Login></Login>} errorElement={<Errorelement></Errorelement>}></Route>
+          <Route index element={<Blogs></Blogs>} errorElement={<Errorelement></Errorelement>}></Route>
+          <Route path="/newblog" element={<Newblog />}></Route>
         </Route>
 
       </Routes>
