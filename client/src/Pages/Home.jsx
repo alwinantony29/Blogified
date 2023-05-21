@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import Navbar from '../Components/Navbar/Navbar'
 import { Outlet } from 'react-router-dom'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase/firebase';
 import  { userContext } from '../Context/Context';
+import NavBar from '../Components/Navbar/Appbar';
 
 function Home() {
   const {setUser}=useContext(userContext)
@@ -22,7 +22,9 @@ function Home() {
   return (
     <>
       
-        <Navbar></Navbar>
+        {/* <Navbar></Navbar> */}
+        {/* <ResponsiveAppBar></ResponsiveAppBar> */}
+        <NavBar/>
         <Outlet></Outlet>
       
     </>
