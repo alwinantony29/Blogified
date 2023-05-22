@@ -8,6 +8,7 @@ import NavBar from '../Components/Navbar/Appbar';
 function Home() {
   const {setUser}=useContext(userContext)
     onAuthStateChanged(auth, (user) => {
+      console.log('auth changed function call');
     if (user) {
       // User is signed in
       const uid = user.uid;

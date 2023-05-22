@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import axios from "axios";
 import { userContext } from '../../Context/Context';
+import { SERVER_URL } from '../../data/constants';
 function Newblog() {
     const { user } = useContext(userContext)
     const [heading, setHeading] = useState('')
@@ -8,7 +9,7 @@ function Newblog() {
     const submit = async (e) => {
         e.preventDefault()
         try {
-            await axios.post("http://localhost:5000/newblog", {
+            await axios.post(SERVER_URL+"newblog", {
                 authorName: user.displayName, heading, content,
             }).then((response) => console.log(response.data.message))
 

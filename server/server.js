@@ -5,13 +5,15 @@ const connectDB = require('./mongooseConfig')
 const app = express()
 app.use(cors())
 app.use(express.json())
-// connecting to database
+// connecting to database 
 connectDB()
+
 app.get('/', (req, res) => {
-    res.json({ message: "Hello from server!" });
+    blogModel.find({}).then((data)=>{res.send(data);})    
 });
+
 app.post('/newblog', async (req, res) => {
-    blogModel.create(req.body)
+    blogModel.insert(req.body)
     res.json({ message: "Hello from server after newblog post!" });
 })
 app.listen(5000, () => { console.log('server started at 5000'); })
