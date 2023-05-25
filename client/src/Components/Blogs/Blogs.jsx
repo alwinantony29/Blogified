@@ -14,37 +14,31 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {SERVER_URL}  from '../../data/constants';
 import axios from 'axios';
-export async function loader(){
-}
-function Blogs() {
-  const [blogData, setblogData] = React.useState([])
-  React.useEffect(() => {
-    console.log('useeffect working');
+import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
+export default async function loader(){
+  console.log('loader working');
   try{ 
-    async function hello(){
-      console.log('f call');
-      await axios.get(SERVER_URL).then(response=>{
-    // console.log(response.data)
-    setblogData(response.data)
-  })
-  
-  }hello()
+      const blogs=await axios.get(SERVER_URL)  
+      if(!blogs)throw new Error("no blogs found")
+      
+      return {blogs}
 } catch(e){
     console.log(e);
-   }
-  
-    return () => {
-      
-    }
-  }, [])
-  
+   } 
+}
+export function Blogs() {
+  const navigate=useNavigate()
+  const [blogData, setblogData] = React.useState([])
+  const loaderData=useLoaderData()
+  setblogData(loaderData.blogs.data)
+  console.log(loaderData.blogs.data);
   return (
     <>
       <div className="container-fluid">
         <div className="row m-5">
         {blogData.map((blog,i)=>{
-          return(<div className="col-md-6">
-    <Card  key={i}sx={{ maxWidth: 345,bgcolor:red[110] }}>
+          return(<div key={i} className="col-md-6">
+    <Card  sx={{ maxWidth: 345,bgcolor:red[110] }}>
       <CardHeader
         avatar={
           <Avatar src={blog.authorImageURL} sx={{ bgcolor: red[500] }} aria-label="recipe"></Avatar>
@@ -58,6 +52,7 @@ function Blogs() {
         subheader={blog.date.toString().substr(0,10)}
       />
       <CardMedia
+      onClick={()=>navigate('/blog')}
         component="img"
         height="194"
         image={blog.blogImageURL}
@@ -84,4 +79,4 @@ function Blogs() {
   );
 }
 
-export default Blogs;
+

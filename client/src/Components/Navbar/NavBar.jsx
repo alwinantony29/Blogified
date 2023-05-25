@@ -12,9 +12,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/Context';
-import { signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
 import { Snackbar } from '@mui/material';
 
@@ -23,7 +23,21 @@ function NavBar() {
   const { user, setUser } = React.useContext(userContext)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+React.useEffect(()=>{
+  onAuthStateChanged(auth, (user) => {
+    console.log('auth changed function call');
+  if (user) {
+    // User is signed in
+    const uid = user.uid;
+    setUser(user)
+    // ...
+  } else {
+    // User is signed out
+    setUser(null)
+    // ...
+  }
+});
+},[])
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -143,9 +157,10 @@ function NavBar() {
             > CONTACT US
             </Button>
           </Box>
-
+            {/* right side user image code */}
           <Box sx={{ flexGrow: 0 }}>
-            <Button sx={{ my: 2, color: 'white', display: 'inline' }}>{user?`Hey ${user.displayName}`:''}</Button>
+            <Button sx={{ my: 2, color: 'white', display: 'inline' }}>{user?`Hey ${user.displayName}`:'sign in cheyy mwonu'}
+            </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="User Image" src={user ? user.photoURL : ''} />
@@ -175,15 +190,15 @@ function NavBar() {
                     console.log('logout succesfull')
                     setUser(null)
                   }).catch((error) => {
-                    // An error happened.
                     console.log(error);
                   })}>{'Logout'}</Typography>
-                </MenuItem>] : [
-                <MenuItem key={'login'} onClick={handleCloseUserMenu}>
+                </MenuItem>] :
+                 
+                 [<MenuItem key={'login'} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center" onClick={() => navigate('/login')} >Login</Typography>
                 </MenuItem>]}
               <MenuItem key={'myblogs'} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" >My Blogs</Typography>
+                <Typography textAlign="center" onClick={()=>navigate('/myblogs')} >My Blogs</Typography>
               </MenuItem>
 
             </Menu>

@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const blogModel = require('./models/blogModel')
+const {blogModel} = require('./models/blogModel')
 const connectDB = require('./mongooseConfig')
 const app = express()
 app.use(cors())
@@ -13,7 +13,9 @@ app.get('/', (req, res) => {
 });
 
 app.post('/newblog', async (req, res) => {
-    blogModel.insert(req.body)
+    const createdBlog=new blogModel(req.body)
+    console.log(req.body)
+   await createdBlog.save()
     res.json({ message: "Hello from server after newblog post!" });
 })
 app.listen(5000, () => { console.log('server started at 5000'); })

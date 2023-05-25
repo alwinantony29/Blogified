@@ -1,9 +1,16 @@
+import { Button } from '@mui/material';
 import React from 'react'
+import { useNavigate, useRouteError } from 'react-router-dom'
 
 function Errorelement() {
-  console.log('error is working');
+  const navigate = useNavigate()
+  const error = useRouteError()
+  console.log(error);
   return (
-    <div>errorElement</div>
+    <div>
+      {error.data}
+      <Button onClick={() => navigate(-1)}>Go back</Button>
+    </div>
   )
 }
 

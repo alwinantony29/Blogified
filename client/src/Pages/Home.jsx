@@ -1,33 +1,13 @@
-import React, { useContext } from 'react'
-import { Outlet } from 'react-router-dom'
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from '../firebase/firebase';
-import  { userContext } from '../Context/Context';
-import NavBar from '../Components/Navbar/Appbar';
+import React from 'react'
+import NavBar from '../Components/Navbar/NavBar';
+import { Outlet } from 'react-router-dom';
 
 function Home() {
-  const {setUser}=useContext(userContext)
-    onAuthStateChanged(auth, (user) => {
-      console.log('auth changed function call');
-    if (user) {
-      // User is signed in
-      const uid = user.uid;
-      setUser(user)
-      // ...
-    } else {
-      // User is signed out
-      setUser(null)
-      // ...
-    }
-  });
   return (
     <>
-      
-        {/* <Navbar></Navbar> */}
-        {/* <ResponsiveAppBar></ResponsiveAppBar> */}
-        <NavBar/>
-        <Outlet></Outlet>
-      
+      <NavBar />
+      <Outlet/>
+
     </>
   )
 }
