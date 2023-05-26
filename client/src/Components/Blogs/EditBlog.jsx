@@ -17,24 +17,13 @@ import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
 import { useNavigate } from 'react-router-dom';
 
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
-export default function CreateBlog() {
+export default function EditBlog() {
     const navigate=useNavigate()
     const { user } = React.useContext(userContext)
     const [heading, setHeading] = React.useState('')
@@ -42,16 +31,16 @@ export default function CreateBlog() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post(SERVER_URL + 'newblog', {
+            await axios.put(SERVER_URL + 'edit-blog/', {
                 heading, content, authorName: user.displayName, authorImageURL: '', date: new Date(),
                 blogImageURL: 'https://wallpapers.com/images/thumbnail/akatsuki-yahiko-six-paths-of-pain-iynerr1vanp0fulx.webp', 
                 likedCount: 0,
             }).then((response)=>{
                 console.log(response);
-                navigate('/')
+                navigate('/my-blogs')
             })
         } catch (e) {
-            console.log("error adich while sending new blog" + e);
+            console.log("error adich while updating blog" + e);
         }
 
     };
@@ -68,11 +57,8 @@ export default function CreateBlog() {
                         alignItems: 'center',
                     }}
                 >
-                    {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
                     <Typography component="h1" variant="h5">
-                        New Blog
+                        Edit Blog
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -98,33 +84,16 @@ export default function CreateBlog() {
                             label="Content"
                             id="content"
                         />
-                        {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Submit Blog
+                            Update Blog
                         </Button>
-                        {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid> */}
                     </Box>
                 </Box>
-                {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
             </Container>
         </ThemeProvider>
     );

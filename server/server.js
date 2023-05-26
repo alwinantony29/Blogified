@@ -9,9 +9,16 @@ app.use(express.json())
 connectDB()
 
 app.get('/', (req, res) => {
-    blogModel.find({}).then((data)=>{res.send(data);})    
+    blogModel.find({}).then((data)=>{res.send(data)})    
 });
-
+app.get('/:blogID',async(req,res)=>{
+    const id=req.params.blogID 
+    try{
+     await blogModel.findById(id).then((data)=>res.send(data))
+    }catch(e){
+        console.log(e); 
+    }
+})
 app.post('/newblog', async (req, res) => {
     const createdBlog=new blogModel(req.body)
     console.log(req.body)
