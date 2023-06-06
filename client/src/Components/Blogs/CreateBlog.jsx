@@ -43,8 +43,9 @@ export default function CreateBlog() {
         event.preventDefault();
         try {
             await axios.post(SERVER_URL + 'newblog', {
+                authorID:user.uid,
                 heading, content, authorName: user.displayName, authorImageURL: '', date: new Date(),
-                blogImageURL: 'https://wallpapers.com/images/thumbnail/akatsuki-yahiko-six-paths-of-pain-iynerr1vanp0fulx.webp', 
+                blogImageURL: '', 
                 likedCount: 0,
             }).then((response)=>{
                 console.log(response);

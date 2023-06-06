@@ -8,6 +8,8 @@ import CreateBlog from './Components/Blogs/CreateBlog.jsx'
 import Errorelement from './Components/ErrorElement/Errorelement.jsx'
 import  {Blogs} from "./Components/Blogs/Blogs.jsx"
 import SingleBlog from './Components/Blogs/SingleBlog.jsx'
+import { MyBlogs } from './Components/Blogs/MyBlogs.jsx'
+import EditBlog from './Components/Blogs/EditBlog.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
 
@@ -15,9 +17,10 @@ const router = createBrowserRouter(
       <Route index element={<Blogs/>} />
       <Route path="/login" element={<SignIn />}/>
       <Route path="/newblog" element={<CreateBlog />}/>
-      <Route path='/myblogs' />
-      <Route path="/:blogID" element={<SingleBlog/>} />
-      <Route path="contactus" element={<>Contact cheyy mwone</>} />
+      <Route path='/myblogs' element={<MyBlogs/>}/>
+      <Route path="/blog/:blogID" element={<SingleBlog/>} />
+      <Route path="/edit/:blogID" element={<EditBlog/>} />
+      <Route path="contactus" element={<>Contact Page</>} />
     </Route>
   ))
 ReactDOM.createRoot(document.getElementById('root')).render(

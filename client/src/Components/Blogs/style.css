@@ -1,0 +1,38 @@
+.container-fluid{
+    display: flex;
+    height: 80vh;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+}
+.content{
+    padding: 0 3rem 2rem 5rem;
+    width: 50%;
+    height: auto
+}
+.content span{
+font-size: 2rem;
+}
+.content h1{
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+}
+.content p{
+    margin-top: 1rem;
+
+    font-weight: 500;
+}
+.content .btn{
+    margin-right: 1rem;;
+}
+.img-div{
+    padding: 0 0 1rem 0;
+    width: 50%;
+}
+.img-div img{
+    width: 600px;
+    height: 350px;
+    border-radius: 20px;
+}

@@ -8,6 +8,7 @@ const userSchema=new Schema({
 })
 const blogSchema = new Schema({
     authorName: String,
+    authorID:String,  
     authorImageURL:String,
     date:String,
     blogImageURL:String,

@@ -16,7 +16,6 @@ import { redirect, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
-import { Snackbar } from '@mui/material';
 
 function NavBar() {
   const navigate = useNavigate()

@@ -1,28 +1,15 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { SERVER_URL } from '../../data/constants';
 import axios from 'axios';
-import {  useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import "./style.css"
 export function Blogs() {
   const navigate = useNavigate()
   const [blogData, setblogData] = React.useState([])
 
   // function to load blogs from server 
   const loader = async () => {
-    await axios.get(SERVER_URL).then((response) => {
+    await axios.get(SERVER_URL + "blogs").then((response) => {
       setblogData(response.data)
     })
   }
@@ -32,45 +19,21 @@ export function Blogs() {
   return (
     <>
       <div className="container-fluid">
-        <div className="row">
-          {blogData.map((blog, i) => {
-            return (<div key={blog._d} className="col-md-6">
-              <Card sx={{ maxWidth: 345, bgcolor: red[110] }}>
-                <CardHeader
-                  avatar={
-                    <Avatar src={blog.authorImageURL} sx={{ bgcolor: red[500] }} aria-label="recipe"></Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title={blog.heading}
-                  subheader={blog.date.toString().substr(0, 10)}
-                />
-                <CardMedia
-                  onClick={() => navigate(`/${blog._id}`)}
-                  component="img"
-                  height="194"
-                  image={blog.blogImageURL}
-                  alt="blog image"
-                />
-                <CardContent>
-                  <Typography variant="body2" color="text.primary">
-                    {blog.content}
-                  </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                </CardActions>
-              </Card></div>)
-          })}
-        </div>
+        {blogData.map((blog) => {
+          return (
+            < >
+              <div key={blog._id} className='content'>
+                <h1>{blog.heading}</h1>
+                <span>By  {blog.authorName}</span>
+                <p> {blog.content.substr(0, 260)} ...</p>
+                <button className='btn btn-primary' onClick={() => navigate(`/blog/${blog._id}`)}> Read more...</button>
+              </div>
+              <div className='img-div'>
+                <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
+              </div>
+            </>
+          )
+        })}
       </div>
     </>
   );

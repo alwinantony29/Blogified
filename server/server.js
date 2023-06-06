@@ -8,9 +8,13 @@ app.use(express.json())
 // connecting to database 
 connectDB()
 
-app.get('/', (req, res) => {
+app.get('/blogs', (req, res) => {
     blogModel.find({}).then((data)=>{res.send(data)})    
 });
+app.get('/myblogs/:userID',(req,res)=>{
+    console.log(req.params.userID);
+    blogModel.find({authorID:req.params.userID}).then((data)=>res.send(data))
+})
 app.get('/:blogID',async(req,res)=>{
     const id=req.params.blogID 
     try{
@@ -18,6 +22,9 @@ app.get('/:blogID',async(req,res)=>{
     }catch(e){
         console.log(e); 
     }
+})
+app.delete('/myblogs/:blogID',(req,res)=>{
+    blogModel.findByIdAndRemove(req.params.blogID).then(data=>{res.send(data)})
 })
 app.post('/newblog', async (req, res) => {
     const createdBlog=new blogModel(req.body)
