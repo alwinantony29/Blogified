@@ -1,13 +1,12 @@
-import * as React from 'react';
+import  React, { useEffect, useState } from 'react';
 import { SERVER_URL } from '../../data/constants';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button } from '@mui/material';
+import { redirect, useNavigate } from 'react-router-dom';
 import { userContext } from '../../Context/userContext';
 import "./style.css"
 export function MyBlogs() {
   const navigate = useNavigate()
-  const [blogData, setblogData] = React.useState([])
+  const [blogData, setblogData] = useState([])
   const { user } = React.useContext(userContext)
   // function to load blogs from server 
   const loader = async () => {
@@ -16,15 +15,15 @@ export function MyBlogs() {
       console.log(response.data);
     })
   }
-  const deleteBlog = () => {
+  const deleteBlog = (ID) => {
     if (confirm("U sure u wanna delete that")) {
-      axios.delete(SERVER_URL + `myblogs/${blog._id}`).then(() => {
+      axios.delete(SERVER_URL + `myblogs/${ID}`).then(() => {
         console.log('blog deleted');
-        navigate('/myblogs')
+        redirect('/myblogs')
       })
     } else { alert("cancelled") }
   }
-  React.useEffect(() => {
+  useEffect(() => {
     loader()
   }, [])
   return (
@@ -39,8 +38,8 @@ export function MyBlogs() {
                   <span>By  {blog.authorName}</span>
                   <p> {blog.content.substr(0, 260)} ...</p>
                   <button className='btn btn-primary' onClick={() => navigate(`/blog/${blog._id}`)}> Read more...</button>
-                  <button className='btn btn-success' onClick={() => navigate(`/edit/${blog._id}`)}>Edit</button>
-                  <button className='btn btn-danger' onClick={() => { deleteBlog() }}>Delete</button>
+                  <button className='btn btn-primary' onClick={() => navigate(`/edit/${blog._id}`)}>Edit blog</button>
+                  <button className='btn btn-danger' onClick={() => { deleteBlog(blog._id) }}>Delete blog</button>
                 </div>
                 <div className='img-div'>
                   <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
