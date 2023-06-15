@@ -24,7 +24,7 @@ export default function EditBlog() {
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.put(SERVER_URL + `editblog/${blog._id}`, {
+      const response = await axios.put(SERVER_URL + `blogs/${blog._id}`, {
         heading,
         content,
       });
@@ -38,10 +38,10 @@ export default function EditBlog() {
 
   const loader = async () => {
     try {
-      const response = await axios.get(SERVER_URL + blogID);
+      const response = await axios.get(SERVER_URL +"blogs/"+ blogID);
       const blogData = response.data;
       setBlog(blogData);
-      setHeading(blogData.heading);
+      setHeading(blogData.heading); 
       setContent(blogData.content);
       console.log('response from axios', blogData);
     } catch (error) {

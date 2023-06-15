@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { SERVER_URL } from '../../data/constants';
 import axios from 'axios';
-
 import Container from '@mui/material/Container';
 import { CssBaseline, Grid } from '@mui/material';
 // react functional component
@@ -13,7 +12,7 @@ function SingleBlog() {
 
   // loading blog data from server
   const loader = async () => {
-    await axios.get(SERVER_URL + blogID).then((response) => {
+    await axios.get(SERVER_URL +"blogs/"+ blogID).then((response) => {
       setBlog(response.data)
       console.log('response from axios', response.data)
     })

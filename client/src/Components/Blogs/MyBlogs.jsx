@@ -17,7 +17,7 @@ export function MyBlogs() {
   }
   const deleteBlog = (ID) => {
     if (confirm("U sure u wanna delete that")) {
-      axios.delete(SERVER_URL + `myblogs/${ID}`).then(() => {
+      axios.delete(SERVER_URL + `blogs/${ID}`).then(() => {
         console.log('blog deleted');
         redirect('/myblogs')
       })
@@ -37,7 +37,7 @@ export function MyBlogs() {
                   <h1>{blog.heading}</h1>
                   <span>By  {blog.authorName}</span>
                   <p> {blog.content.substr(0, 260)} ...</p>
-                  <button className='btn btn-primary' onClick={() => navigate(`/blog/${blog._id}`)}> Read more...</button>
+                  <button className='btn btn-primary' onClick={() => navigate(`/blogs/${blog._id}`)}> Read more...</button>
                   <button className='btn btn-primary' onClick={() => navigate(`/edit/${blog._id}`)}>Edit blog</button>
                   <button className='btn btn-danger' onClick={() => { deleteBlog(blog._id) }}>Delete blog</button>
                 </div>

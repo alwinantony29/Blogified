@@ -26,7 +26,7 @@ export function Blogs() {
                 <h1>{blog.heading}</h1>
                 <span>By  {blog.authorName}</span>
                 <p> {blog.content.substr(0, 260)} ...</p>
-                <button className='btn btn-primary' onClick={() => navigate(`/blog/${blog._id}`)}> Read more...</button>
+                <button className='btn btn-primary' onClick={() => navigate(`/blogs/${blog._id}`)}> Read more...</button>
               </div>
               <div className='img-div'>
                 <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
