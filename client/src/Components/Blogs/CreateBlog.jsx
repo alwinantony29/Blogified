@@ -13,10 +13,12 @@ import {
     Container,
     createTheme,
     ThemeProvider,
-} from '@mui/material'; import axios from 'axios';
+} from '@mui/material';
 import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
 import { useNavigate } from 'react-router-dom';
+import { Image } from 'cloudinary-react';
+import axios from 'axios';
 
 const defaultTheme = createTheme();
 
@@ -29,16 +31,27 @@ export default function CreateBlog() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            const formData = new FormData();
+            formData.append('file', image);
+            formData.append('upload_preset', 'upload_preset_name');
+            const response = await axios.post(
+                'https://api.cloudinary.com/v1_1/ddh0reqyx/image/upload',
+                formData
+            );
+            const { url: imageURL } = response.data
+            console.log('Image uploaded:', imageURL);
+
             await axios.post(SERVER_URL + 'blogs', {
                 authorID: user.uid,
                 heading, content, authorName: user.displayName,
                 authorImageURL: '',
-            }).then((response) => {
-                console.log(response);
+                blogImageURL:imageURL,
+            }).then((res) => {
+                console.log(res);
                 navigate('/')
             })
         } catch (e) {
-            console.log("error  while sending new blog" + e);
+            console.log("error  while uploading image" + e);
         }
     };
 
@@ -72,9 +85,9 @@ export default function CreateBlog() {
                         <input type="file" required onChange={(e) => { setImage(e.target.files[0]) }} />
 
                         {/* checking if user chose an image */}
-                       {
-                           image?<img src={URL.createObjectURL(image)} className='mt-3' style={{ width:"30 rem", height: "20rem", borderRadius: "10px" }} alt="" />:<></>
-                       }
+                        {
+                            image ? <img src={URL.createObjectURL(image)} className='mt-3' style={{ width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" /> : <></>
+                        }
                         <TextField
                             multiline
                             rows={10}

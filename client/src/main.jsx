@@ -12,7 +12,6 @@ import { MyBlogs } from './Components/Blogs/MyBlogs.jsx'
 import EditBlog from './Components/Blogs/EditBlog.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
-
     <Route path="/" element={<Home />} errorElement={<Errorelement />}>
       <Route index element={<Blogs />} />
       <Route path="/login" element={<SignIn />} />

@@ -32,21 +32,24 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const navigate=useNavigate()
+
+  const navigate = useNavigate()
+
   const handleSubmit = (event) => {
+
     event.preventDefault();
     signInWithPopup(auth, provider)
-    .then((result) => {
-        navigate('/')
+      .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        console.log(user.displayName+" signed in");
+        const { email, displayName:userName, uid:userID, photoURL:userImageURL } = result.user
+        
         // IdP data available using getAdditionalUserInfo(result)
-    }).catch((error) => {
+        navigate('/')
+        
+      }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -54,12 +57,7 @@ export default function Login() {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-    });
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // })
+      });
   };
 
   return (
@@ -127,7 +125,6 @@ export default function Login() {
             </Grid> */}
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );
