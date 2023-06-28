@@ -18,6 +18,7 @@ import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { axiosInstance } from '../../config/axios';
 
 const defaultTheme = createTheme();
 
@@ -50,25 +51,19 @@ export default function CreateBlog() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const token = sessionStorage.getItem("token")
             console.log(user);
-            axios.post(SERVER_URL + 'blogs', {
+            axiosInstance.post('/blogs', {
                 blogData: {
                     heading, content, authorName: user.userName,
                     authorImageURL: user.userImageURL,
                     blogImageURL: url,
                 }
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }
-            ).then((res) => {
+            }).then((res) => {
                 console.log(res);
                 navigate('/')
             })
-        } catch (e) {
-            console.log("error  while uploading image" + e);
+        } catch (err) {
+            console.log("error  while uploading image" + err.message);
         }
     };
 

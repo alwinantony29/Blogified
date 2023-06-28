@@ -4,20 +4,21 @@ import axios from 'axios';
 import { redirect, useNavigate } from 'react-router-dom';
 import { userContext } from '../../Context/userContext';
 import "./style.css"
+import { axiosInstance } from '../../config/axios';
 export function MyBlogs() {
   const navigate = useNavigate()
   const [blogData, setblogData] = useState([])
   const { user } = React.useContext(userContext)
   // function to load blogs from server 
   const loader = async () => {
-    await axios.get(SERVER_URL + `myblogs/${user.uid}`).then((response) => {
+    await axiosInstance.get( `/blogs/myblogs`).then((response) => {
       setblogData(response.data)
       console.log(response.data);
     })
   }
   const deleteBlog = (ID) => {
     if (confirm("U sure u wanna delete that")) {
-      axios.delete(SERVER_URL + `blogs/${ID}`).then(() => {
+      axiosInstance.delete( `/blogs/${ID}`).then(() => {
         console.log('blog deleted');
         redirect('/myblogs')
       })

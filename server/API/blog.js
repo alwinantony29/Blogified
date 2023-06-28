@@ -1,86 +1,94 @@
 const express = require('express')
-const blogModel = require('../models/blog')
+const { blogs } = require('../models/blog')
 const { verifyToken } = require('../Helpers')
 const Router = express.Router()
 
-//Get blogs by user ID
-Router.get('/myblogs/', async (req, res) => {
+////////////////////////     Get blogs written by current signed in user     /////////////////////////////
+
+Router.get('/myblogs', verifyToken, async (req, res) => {
     try {
-        await blogModel.find({ authorID: req.params.userID }).then((data) => res.send(data))
+        const result = await blogs.find({ authorID: req.user._id })
+        res.json({ result })
     } catch (error) {
-        console.log(error);
-        res.status(500).send('An error occurred while fetching your blogs');
+        console.log(error.message);
+        res.status(500).send({message:'An error occurred while fetching your blogs'+error.message});
     }
 })
 Router.route('/')
 
-    //get all blogs
+   /////////////////////////////         get all blogs        /////////////////////////////////////////
+
     .get(async (req, res) => {
         try {
-            await blogModel.find({}).then((data) => { res.send(data) })
+            const result = await blogs.find({})
+            res.json({ data })
         } catch (error) {
-            console.log(error);
-            res.status(500).send('An error occurred while fetching blogs from server');
+            console.log(error.message);
+            res.status(500).json({message:'An error occurred while fetching blogs : '+error.message});
         }
     })
 
-    // create a new blog
+    /////////////////////////////         create a new blog      ////////////////////////////////////
+
     .post(verifyToken, async (req, res) => {
         try {
             const { heading, content, authorName, authorImageURL, blogImageURL } = req.body.blogData
             const authorID = req.user._id
-            const createdBlog = new blogModel({heading, content, authorName, authorImageURL, blogImageURL, authorID})
+            const createdBlog = new blogs({ heading, content, authorName, authorImageURL, blogImageURL, authorID })
             await createdBlog.save()
             res.json({ message: "Blog created successfully" });
         } catch (error) {
-            console.log(error);
-            res.status(500).send('An error occurred while creating the blog : ' + error.message);
+            console.log(error.message);
+            res.status(500).json({ message: 'An error occurred while creating the blog : ' + error.message });
         }
     });
 
 
 Router.route('/:blogID')
 
-    // get blog by ID
+    ///////////////////////////////          get blog by ID             /////////////////////////////
+
     .get(async (req, res) => {
         req.params.blogID
         try {
-            await blogModel.findById(req.params.blogID).then((data) => res.send(data))
-        } catch (e) {
-            console.log(e);
-            res.status(500).send('An error occurred while fetching the blog');
+            const result = await blogs.findById(req.params.blogID).populate("authorID").exec()
+            res.json({ result })
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).json({message:'An error occurred while fetching the blog: ' + err.message});
         }
     })
 
-    // delete blog by ID
+    ///////////////////////////////          delete blog by ID          /////////////////////////////
     .delete(async (req, res) => {
         try {
-            await blogModel.findByIdAndRemove(req.params.blogID).then(data => { res.send(data) })
+            const result = await blogs.findByIdAndRemove(req.params.blogID)
+            res.json({ result })
         } catch (error) {
-            console.log(error);
-            res.status(500).send('An error occurred while deleting the blog');
+            console.log(error.message);
+            res.status(500).json({message:'An error occurred while deleting the blog : ' + error.message})
         }
     })
 
-    // update blog by ID
+    ///////////////////////////////          update blog by ID          /////////////////////////////
     .put(async (req, res) => {
-        await blogModel.findByIdAndUpdate(
-            req.params.blogID
-            , {
-                $set: {
-                    heading: req.body.heading,
-                    content: req.body.content,
-                    date: new Date(),
-                }
-            },
-            { new: true } // This option returns the updated document
-        ).then((updatedBlog) => {
-            console.log('Updated blog:', updatedBlog);
-            res.send('Blog updated successfully');
-        }).catch((error) => {
-            console.log('Error occured while updating blog:', error);
-            res.status(500).send('An error occured while updating the blog')
-        })
-    });
+        try {
+            const result = await blogs.findByIdAndUpdate(
+                req.params.blogID,
+                {
+                    $set: {
+                        heading: req.body.heading,
+                        content: req.body.content,
+                        blogImageURL: req.body.blogImageURL,
+                    }
+                }, { new: true } // This option returns the updated document
+            )
+            console.log('Updated blog:', result)
+            res.json({message:'Blog updated successfully'})
+        } catch (error) {
+            console.log('Error occured while updating blog:', error.message);
+            res.status(500).json({message:'An error occured while updating the blog'+error.message})
+        }
+    })
 
 module.exports = Router

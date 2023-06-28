@@ -4,6 +4,7 @@ import { SERVER_URL } from '../../data/constants';
 import axios from 'axios';
 import Container from '@mui/material/Container';
 import { CssBaseline, Grid } from '@mui/material';
+import { axiosInstance } from '../../config/axios';
 // react functional component
 function SingleBlog() {
 
@@ -12,7 +13,7 @@ function SingleBlog() {
 
   // loading blog data from server
   const loader = async () => {
-    await axios.get(SERVER_URL +"blogs/"+ blogID).then((response) => {
+    await axiosInstance.get("/blogs/" + blogID).then((response) => {
       setBlog(response.data)
       console.log('response from axios', response.data)
     })
@@ -23,19 +24,21 @@ function SingleBlog() {
   }, [])
   return (
     <>
-      <Container  style={{display:"flex",justifyContent:"center"}} component="main" maxWidth="md">
-        <CssBaseline/>
-        <Grid sx={{textAlign:"center"}}>
-        <img className="m-4" style={{width:40+'rem',height:17+"rem"}} fullwidth  src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
-        <h1>{blog.heading}</h1>
-        <p>by {blog?.authorName}</p>
-        <p>{blog?.date}</p>
-        <p>
-          {blog.content}
-        </p>
-        <br />
-        </Grid>
+      {blog &&
+        <Container style={{ display: "flex", justifyContent: "center" }} component="main" maxWidth="md">
+          <CssBaseline />
+          <Grid sx={{ textAlign: "center" }}>
+            <img className="m-4" style={{borderRadius:"20px", width: 40 + 'rem', height: 17 + "rem" }}  src={blog.blogImageURL} alt="" />
+            <h1>{blog.heading}</h1>
+            <p>by {blog?.authorID?.userName}</p>
+            <p>{blog?.createdAt}</p>
+            <p>
+              {blog.content}
+            </p>
+            <br />
+          </Grid>
         </Container>
+      }
     </>
   )
 }

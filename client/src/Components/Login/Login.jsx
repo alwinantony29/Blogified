@@ -15,10 +15,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
-import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
-
+import { axiosInstance } from '../../config/axios';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -36,9 +34,9 @@ export default function Login() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const gogleToken = credential.accessToken;
         // The signed-in user info.
-        console.log(result.user);
+        console.log("user: "+result.user);
         const { email, displayName: userName, uid: userID, photoURL: userImageURL } = result.user
-        const response = await axios.post(SERVER_URL + "auth/signup", {
+        const response = await axiosInstance.post( "/auth/signup", {
           credentials: {
             email: email, userName: userName,
             userID: userID, userImageURL: userImageURL

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import { axiosInstance } from '../../config/axios';
 
 const defaultTheme = createTheme();
 
@@ -24,7 +25,7 @@ export default function EditBlog() {
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.put(SERVER_URL + `blogs/${blog._id}`, {
+      const response = await axiosInstance.put( `/blogs/${blog._id}`, {
         heading,
         content,
       });
@@ -38,7 +39,7 @@ export default function EditBlog() {
 
   const loader = async () => {
     try {
-      const response = await axios.get(SERVER_URL +"blogs/"+ blogID);
+      const response = await axiosInstance.get("/blogs/"+ blogID);
       const blogData = response.data;
       setBlog(blogData);
       setHeading(blogData.heading); 

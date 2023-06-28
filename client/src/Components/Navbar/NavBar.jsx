@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { redirect, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
 
 function NavBar() {

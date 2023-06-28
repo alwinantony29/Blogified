@@ -2,6 +2,8 @@ import * as React from 'react';
 import { SERVER_URL } from '../../data/constants';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../../config/axios';
+
 import "./style.css"
 export function Blogs() {
   const navigate = useNavigate()
@@ -9,7 +11,7 @@ export function Blogs() {
 
   // function to load blogs from server 
   const loader = async () => {
-    await axios.get(SERVER_URL + "blogs").then((response) => {
+    await axiosInstance.get("/blogs").then((response) => {
       setblogData(response.data)
     })
   }
