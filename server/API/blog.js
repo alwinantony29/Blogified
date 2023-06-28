@@ -1,9 +1,10 @@
 const express = require('express')
 const blogModel = require('../models/blog')
+const { verifyToken } = require('../Helpers')
 const Router = express.Router()
 
 //Get blogs by user ID
-Router.get('/myblogs/:userID', async (req, res) => {
+Router.get('/myblogs/', async (req, res) => {
     try {
         await blogModel.find({ authorID: req.params.userID }).then((data) => res.send(data))
     } catch (error) {
@@ -11,7 +12,7 @@ Router.get('/myblogs/:userID', async (req, res) => {
         res.status(500).send('An error occurred while fetching your blogs');
     }
 })
-Router.route('/') 
+Router.route('/')
 
     //get all blogs
     .get(async (req, res) => {
@@ -24,12 +25,15 @@ Router.route('/')
     })
 
     // create a new blog
-    .post(async (req, res) => {
+    .post(verifyToken, async (req, res) => {
         try {
-            // const createdBlog = new blogModel(req.body)
-            // await createdBlog.save()
+            const { heading, content, authorName, authorImageURL, blogImageURL } = req.body.blogData
+            const authorID = req.user._id
+            const createdBlog = new blogModel({heading, content, authorName, authorImageURL, blogImageURL, authorID})
+            await createdBlog.save()
             res.json({ message: "Blog created successfully" });
         } catch (error) {
+            console.log(error);
             res.status(500).send('An error occurred while creating the blog : ' + error.message);
         }
     });

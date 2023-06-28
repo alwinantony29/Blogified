@@ -17,7 +17,6 @@ import {
 import { SERVER_URL } from '../../data/constants';
 import { userContext } from '../../Context/userContext';
 import { useNavigate } from 'react-router-dom';
-import { Image } from 'cloudinary-react';
 import axios from 'axios';
 
 const defaultTheme = createTheme();
@@ -28,25 +27,43 @@ export default function CreateBlog() {
     const [heading, setHeading] = useState('')
     const [content, setContent] = useState('')
     const [image, setImage] = useState(null)
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    let url = ""
+    const handleImage = async (event) => {
+        setImage(event.target.files[0])
         try {
             const formData = new FormData();
-            formData.append('file', image);
+            formData.append('file', event.target.files[0]);
             formData.append('upload_preset', 'upload_preset_name');
             const response = await axios.post(
                 'https://api.cloudinary.com/v1_1/ddh0reqyx/image/upload',
                 formData
-            );
-            const { url: imageURL } = response.data
-            console.log('Image uploaded:', imageURL);
+            )
+            console.log(response.data.url);
+            url += response.data.url
+            console.log('Image uploaded:', url);
+        } catch (err) {
+            console.log(err);
+        }
 
-            await axios.post(SERVER_URL + 'blogs', {
-                authorID: user.uid,
-                heading, content, authorName: user.displayName,
-                authorImageURL: '',
-                blogImageURL:imageURL,
-            }).then((res) => {
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const token = sessionStorage.getItem("token")
+            console.log(user);
+            axios.post(SERVER_URL + 'blogs', {
+                blogData: {
+                    heading, content, authorName: user.userName,
+                    authorImageURL: user.userImageURL,
+                    blogImageURL: url,
+                }
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+            ).then((res) => {
                 console.log(res);
                 navigate('/')
             })
@@ -82,7 +99,7 @@ export default function CreateBlog() {
                             name="heading"
                             autoFocus
                         />
-                        <input type="file" required onChange={(e) => { setImage(e.target.files[0]) }} />
+                        <input type="file" required onChange={handleImage} />
 
                         {/* checking if user chose an image */}
                         {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,24 +19,12 @@ import { auth } from '../../firebase/firebase';
 
 function NavBar() {
   const navigate = useNavigate()
-  const { user, setUser } = React.useContext(userContext)
+  const { user, setUser } = useContext(userContext)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-React.useEffect(()=>{
-  onAuthStateChanged(auth, (user) => {
-    console.log('auth changed function call');
-  if (user) {
-    // User is signed in
-    const uid = user.uid;
-    setUser(user)
-    // ...
-  } else {
-    // User is signed out
-    setUser(null)
-    // ...
-  }
-});
-},[])
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("user")))
+  }, [])
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -53,7 +41,7 @@ React.useEffect(()=>{
   };
 
   return (
-    <AppBar  position="static">
+    <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -156,13 +144,15 @@ React.useEffect(()=>{
             > CONTACT US
             </Button>
           </Box>
-            {/* right side user image code */}
+
+          {/* right side user image code */}
+
           <Box sx={{ flexGrow: 0 }}>
-            <Button sx={{ my: 2, color: 'white', display: 'inline' }}>{user?`Hey ${user.displayName}`:'sign in cheyy mwonu'}
+            <Button sx={{ my: 2, color: 'white', display: 'inline' }}>{user ? `Hey ${user.userName}` : 'sign in cheyy mwonu'}
             </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Image" src={user ? user.photoURL : ''} />
+                <Avatar alt="User Image" src={user ? user.userImageURL : ''} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -188,16 +178,18 @@ React.useEffect(()=>{
                     // Sign-out successful.
                     console.log('logout succesfull')
                     setUser(null)
+                    // Clear the entire sessionStorage
+                    sessionStorage.clear();
                   }).catch((error) => {
                     console.log(error);
                   })}>{'Logout'}</Typography>
                 </MenuItem>] :
-                 
-                 [<MenuItem key={'login'} onClick={handleCloseUserMenu}>
+
+                [<MenuItem key={'login'} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center" onClick={() => navigate('/login')} >Login</Typography>
                 </MenuItem>]}
               <MenuItem key={'myblogs'} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={()=>navigate('/myblogs')} >My Blogs</Typography>
+                <Typography textAlign="center" onClick={() => navigate('/myblogs')} >My Blogs</Typography>
               </MenuItem>
 
             </Menu>

@@ -21,8 +21,8 @@ export function Blogs() {
       <div className="container-fluid">
         {blogData.map((blog) => {
           return (
-            < >
-              <div key={blog._id} className='content'>
+              <div key={blog._id}>
+              <div  className='content'>
                 <h1>{blog.heading}</h1>
                 <span>By  {blog.authorName}</span>
                 <p> {blog.content.substr(0, 260)} ...</p>
@@ -31,7 +31,7 @@ export function Blogs() {
               <div className='img-div'>
                 <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
               </div>
-            </>
+              </div>
           )
         })}
       </div>
