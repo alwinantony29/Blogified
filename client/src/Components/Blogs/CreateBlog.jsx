@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useState } from 'react';
 import {
     Avatar,
     Button,
@@ -14,8 +14,6 @@ import {
     createTheme,
     ThemeProvider,
 } from '@mui/material';
-import { SERVER_URL } from '../../data/constants';
-import { userContext } from '../../Context/userContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { axiosInstance } from '../../config/axios';
@@ -24,14 +22,13 @@ const defaultTheme = createTheme();
 
 export default function CreateBlog() {
     const navigate = useNavigate()
-    const { user } = useContext(userContext)
-    const [heading, setHeading] = useState('')
-    const [content, setContent] = useState('')
-    const [image, setImage] = useState(null)
-    let url = ""
+    const [blog, setBlog] = useState({});
+    const [uploading, setUploading] = useState(false)
+
     const handleImage = async (event) => {
-        setImage(event.target.files[0])
+        setBlog({ ...blog, blogImageURL: URL.createObjectURL(event.target.files[0]) })
         try {
+            setUploading(true)
             const formData = new FormData();
             formData.append('file', event.target.files[0]);
             formData.append('upload_preset', 'upload_preset_name');
@@ -39,11 +36,12 @@ export default function CreateBlog() {
                 'https://api.cloudinary.com/v1_1/ddh0reqyx/image/upload',
                 formData
             )
-            console.log(response.data.url);
-            url += response.data.url
-            console.log('Image uploaded:', url);
+            setBlog({ ...blog, blogImageURL: response.data.url })
+            console.log('Image uploaded');
+            setUploading(false)
+
         } catch (err) {
-            console.log(err);
+            alert("" + err)
         }
 
     }
@@ -51,19 +49,10 @@ export default function CreateBlog() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log(user);
-            axiosInstance.post('/blogs', {
-                blogData: {
-                    heading, content, authorName: user.userName,
-                    authorImageURL: user.userImageURL,
-                    blogImageURL: url,
-                }
-            }).then((res) => {
-                console.log(res);
-                navigate('/')
-            })
+            const response = await axiosInstance.post('/blogs', { blog })
+            navigate('/')
         } catch (err) {
-            console.log("error  while uploading image" + err.message);
+            alert(""+err);
         }
     };
 
@@ -87,8 +76,8 @@ export default function CreateBlog() {
                             margin="normal"
                             required
                             fullWidth
-                            value={heading}
-                            onChange={(e) => setHeading(e.target.value)}
+                            value={blog.heading}
+                            onChange={(e) => setBlog({ ...blog, heading: e.target.value })}
                             id="heading"
                             label="Heading"
                             name="heading"
@@ -97,17 +86,17 @@ export default function CreateBlog() {
                         <input type="file" required onChange={handleImage} />
 
                         {/* checking if user chose an image */}
-                        {
-                            image ? <img src={URL.createObjectURL(image)} className='mt-3' style={{ width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" /> : <></>
-                        }
+
+                        <img src={blog.blogImageURL} className='mt-3' style={{ opacity: uploading ? "50%" : "100%", width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" />
+
                         <TextField
                             multiline
                             rows={10}
                             margin="normal"
                             required
                             fullWidth
-                            onChange={(e) => setContent(e.target.value)}
-                            value={content}
+                            onChange={(e) => setBlog({ ...blog, content: e.target.value })}
+                            value={blog.content}
                             name="content"
                             label="Content"
                             id="content"

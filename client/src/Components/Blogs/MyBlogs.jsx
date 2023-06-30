@@ -1,19 +1,15 @@
 import  React, { useEffect, useState } from 'react';
-import { SERVER_URL } from '../../data/constants';
-import axios from 'axios';
 import { redirect, useNavigate } from 'react-router-dom';
-import { userContext } from '../../Context/userContext';
 import "./style.css"
 import { axiosInstance } from '../../config/axios';
 export function MyBlogs() {
   const navigate = useNavigate()
   const [blogData, setblogData] = useState([])
-  const { user } = React.useContext(userContext)
   // function to load blogs from server 
   const loader = async () => {
     await axiosInstance.get( `/blogs/myblogs`).then((response) => {
-      setblogData(response.data)
-      console.log(response.data);
+      setblogData(response.data.result)
+      console.log(response.data.result);
     })
   }
   const deleteBlog = (ID) => {
@@ -43,7 +39,7 @@ export function MyBlogs() {
                   <button className='btn btn-danger' onClick={() => { deleteBlog(blog._id) }}>Delete blog</button>
                 </div>
                 <div className='img-div'>
-                  <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
+                  <img src={blog.blogImageURL} alt="" />
                 </div>
               </>
             )

@@ -1,44 +1,52 @@
-import * as React from 'react';
-import { SERVER_URL } from '../../data/constants';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
-
 import "./style.css"
-export function Blogs() {
-  const navigate = useNavigate()
-  const [blogData, setblogData] = React.useState([])
 
-  // function to load blogs from server 
-  const loader = async () => {
-    await axiosInstance.get("/blogs").then((response) => {
-      setblogData(response.data)
-    })
+export async function loader() {
+  try {
+    const response = await axiosInstance.get("/blogs")
+    console.log("loader call");
+    return (response.data.result)
+  } catch (err) {
+    return ([])
   }
-  React.useEffect(() => {
-    loader()
-  }, [])
+}
+
+export function Blogs() {
+
+  const navigate = useNavigate()
+  const [blogData, setblogData] = useState([])
+  const data= useLoaderData()
+
+  useEffect(()=>{
+    setblogData(data);
+  },[data])
+  
   return (
     <>
       <div className="container-fluid">
         {blogData.map((blog) => {
           return (
-              <div key={blog._id}>
-              <div  className='content'>
+            <div key={blog._id}>
+              <div className='content'>
                 <h1>{blog.heading}</h1>
-                <span>By  {blog.authorName}</span>
+                <span>By  {blog.authorID.userName}</span><br />
+                <span>On {blog.createdAt}</span>
                 <p> {blog.content.substr(0, 260)} ...</p>
-                <button className='btn btn-primary' onClick={() => navigate(`/blogs/${blog._id}`)}> Read more...</button>
+                <button className='btn btn-primary' onClick={() => navigate(`/blogs/${blog._id}`)}>
+                  Read more...
+                </button>
               </div>
               <div className='img-div'>
-                <img src="https://cdn.aglty.io/blog-starter-2021-template/posts/gaddafi-rusli-2ueUnL4CkV8-unsplash%201.jpg?q=60&w=768&format=auto" alt="" />
+                <img src={blog.blogImageURL} alt="" />
               </div>
-              </div>
+            </div>
           )
         })}
       </div>
     </>
-  );
+  )
 }
 
 

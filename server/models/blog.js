@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-// create a schema
+
 const blogSchema = new Schema({
 
   authorID: { type: Schema.Types.ObjectId, ref: 'user' },
