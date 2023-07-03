@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { SERVER_URL } from '../../data/constants';
-import axios from 'axios';
 import Container from '@mui/material/Container';
-import { CssBaseline, Grid } from '@mui/material';
+import { CssBaseline, Grid, Stack } from '@mui/material';
 import { axiosInstance } from '../../config/axios';
-// react functional component
+
 function SingleBlog() {
 
   const [blog, setBlog] = useState({})
@@ -14,8 +12,7 @@ function SingleBlog() {
   // loading blog data from server
   const loader = async () => {
     await axiosInstance.get("/blogs/" + blogID).then((response) => {
-      setBlog(response.data)
-      console.log('response from axios', response.data)
+      setBlog(response.data.result)
     })
   }
 
@@ -24,21 +21,17 @@ function SingleBlog() {
   }, [])
   return (
     <>
-      {blog &&
-        <Container style={{ display: "flex", justifyContent: "center" }} component="main" maxWidth="md">
-          <CssBaseline />
-          <Grid sx={{ textAlign: "center" }}>
-            <img className="m-4" style={{borderRadius:"20px", width: 40 + 'rem', height: 17 + "rem" }}  src={blog.blogImageURL} alt="" />
+        <Container component="main" maxWidth="md">
+          <Stack gap={2} sx={{my:4,alignItems:'center'}}>
+            <img style={{ borderRadius: "20px", width: '40rem', height: "17rem" }} 
+            src={blog.blogImageURL} alt="blog image" />
             <h1>{blog.heading}</h1>
-            <p>by {blog?.authorID?.userName}</p>
-            <p>{blog?.createdAt}</p>
-            <p>
-              {blog.content}
-            </p>
-            <br />
-          </Grid>
+            <p>by {blog.authorID?.userName}</p>
+            <p> {blog.createdAt} </p>
+            <p> {blog.content} </p>
+          </Stack>
         </Container>
-      }
+      
     </>
   )
 }

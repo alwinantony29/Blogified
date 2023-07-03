@@ -22,7 +22,7 @@ import { axiosInstance } from '../../config/axios';
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const {  setUser } = useContext(userContext)
+  const { setUser } = useContext(userContext)
   const navigate = useNavigate()
 
   const handleSubmit = (event) => {
@@ -34,9 +34,9 @@ export default function Login() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const gogleToken = credential.accessToken;
         // The signed-in user info.
-        console.log("user: "+result.user);
+        console.log("user: " + result.user);
         const { email, displayName: userName, uid: userID, photoURL: userImageURL } = result.user
-        const response = await axiosInstance.post( "/auth/signup", {
+        const response = await axiosInstance.post("/auth/signup", {
           credentials: {
             email: email, userName: userName,
             userID: userID, userImageURL: userImageURL
@@ -52,7 +52,7 @@ export default function Login() {
         navigate('/')
 
       }).catch((error) => {
-        console.log(error);
+        alert(error);
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;

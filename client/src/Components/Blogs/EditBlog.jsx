@@ -9,6 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
+import { Stack } from '@mui/material';
 
 const defaultTheme = createTheme();
 
@@ -40,12 +41,11 @@ export default function EditBlog() {
         'https://api.cloudinary.com/v1_1/ddh0reqyx/image/upload',
         formData
       )
-      const { url } = response.data
       setBlog({ ...blog, blogImageURL: response.data.url })
       setUploading(false)
 
     } catch (err) {
-      throw new Error(err);
+      alert(err);
     }
   }
   const handleUpdate = async (event) => {
@@ -55,7 +55,7 @@ export default function EditBlog() {
       alert(response);
       navigate('/myblogs');
     } catch (error) {
-      alert('An error occurred while updating the blog:'+ error);
+      alert('An error occurred while updating the blog:' + error);
     }
   };
 
@@ -64,61 +64,72 @@ export default function EditBlog() {
   }, []);
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+    <Container component="main" maxWidth="sm" sx={{ my: 5 }}>
+      {/* <CssBaseline /> */}
+      <Stack gap={3} textAlign={'center'}>
+
+        <Typography component="h1" variant="h4">
+          Edit Blog
+        </Typography>
+
+        {/* <input type="file" onChange={handleImage} />
+          <img src={blog.blogImageURL} className='mt-3' style={{ opacity: uploading ? "50%" : "100%", width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" /> */}
+
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          {blog.blogImageURL &&
+            <img
+              src={blog.blogImageURL}
+              style={{
+                opacity: uploading ? '50%' : '100%',
+                width: '100%', height: '15rem', borderRadius: '10px',
+              }}
+              alt="blog image"
+            />
+          }
+          <input
+            type="file"
+            onChange={handleImage}
+            style={{
+              position: 'absolute',
+              bottom: '0',
+              right: '0',
+              margin: '10px',
+              opacity: 70,
+              cursor: 'pointer',
+            }}
+          />
+        </div>
+
+        <TextField
+          variant='standard'
+          required
+          fullWidth
+          value={blog.heading}
+          onChange={(e) => setBlog({ ...blog, heading: e.target.value })}
+          id="heading"
+          name="heading"
+          autoFocus
+        />
+        <TextField
+        
+          variant='standard'
+          multiline
+          required
+          fullWidth
+          onChange={(e) => setBlog({ ...blog, content: e.target.value })}
+          value={blog.content || 'heading'}
+          name="content"
+          id="content"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          onClick={handleUpdate}
         >
-          <Typography component="h1" variant="h4">
-            Edit Blog
-          </Typography>
-          <Box noValidate sx={{ mt: 1 }}>
-
-            <input type="file" onChange={handleImage} />
-
-            <img src={blog.blogImageURL} className='mt-3' style={{ opacity: uploading ? "50%" : "100%", width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" />
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              value={blog.heading}
-              onChange={(e) => setBlog({ ...blog, heading: e.target.value })}
-              id="heading"
-              label="Heading"
-              name="heading"
-              autoFocus
-            />
-            <TextField
-              multiline
-              rows={10}
-              margin="normal"
-              required
-              fullWidth
-              onChange={(e) => setBlog({ ...blog, content: e.target.value })}
-              value={blog.content}
-              name="content"
-              label="Content"
-              id="content"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleUpdate}
-            >
-              Update Blog
-            </Button>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+          Update Blog
+        </Button>
+      </Stack>
+    </Container>
   );
 }

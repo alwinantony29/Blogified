@@ -2,7 +2,6 @@ const express = require('express')
 const User = require('../models/user')
 const Router = express.Router()
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 Router.post("/signup", async (req, res) => {
     try {
         const { email, userName, userImageURL } = req.body.credentials
@@ -10,7 +9,6 @@ Router.post("/signup", async (req, res) => {
         if (user) console.log("user found");
         else {
             console.log("no user found, creating new user!");
-            // const _id = new mongoose.Types.ObjectId(userID+"");
             user = new User({ email, userName, userImageURL })
             await user.save()
         }

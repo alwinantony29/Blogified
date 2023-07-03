@@ -16,14 +16,25 @@ import { redirect, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
+import {useToast} from "@chakra-ui/toast"
 
 function NavBar() {
+  const toast = useToast()
+
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   useEffect(() => {
     setUser(JSON.parse(sessionStorage.getItem("user")))
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      })
+   
   }, [])
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

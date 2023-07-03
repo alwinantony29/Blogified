@@ -28,7 +28,7 @@ Router.route('/')
             const result = await blogs.find({})
                 .populate("authorID", "-_id") // Exclude the _id field
                 .lean().exec()
-            // this is what renaming authorID to user looks like
+            // this is what renaming authorID to user looks like, let client side deal with that
             // const result = data.map(blog => {
             //     return { ...blog, user: blog.authorID }
             // })
