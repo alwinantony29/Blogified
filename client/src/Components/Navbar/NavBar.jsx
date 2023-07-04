@@ -1,52 +1,35 @@
-import React, { useContext, useEffect } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
+import React, { useContext, useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { redirect, useNavigate } from "react-router-dom";
+import { MenuItem, Tooltip, Button, Avatar, Container, Menu, Typography, AppBar, Box, Toolbar } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
-import {useToast} from "@chakra-ui/toast"
+import { useToast } from "@chakra-ui/toast"
+import SwipeableTemporaryDrawer from './SwipableTemporaryDrawer';
 
 function NavBar() {
   const toast = useToast()
 
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   useEffect(() => {
     setUser(JSON.parse(sessionStorage.getItem("user")))
-      toast({
-        title: "Account created.",
-        description: "We've created your account for you.",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      })
-   
+    toast({
+      title: "Account created.",
+      description: "We've created your account for you.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    })
+
   }, [])
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -75,101 +58,48 @@ function NavBar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              <MenuItem key={'Home'} onClick={handleCloseNavMenu}>
-                <Typography onClick={() => navigate(`/`)} textAlign="center">HOMEs</Typography>
-              </MenuItem>
-              <MenuItem key={'New Blog'} onClick={handleCloseNavMenu}>
-                <Typography onClick={() => navigate(`/newblog`)} textAlign="center">NEW BLOG</Typography>
-              </MenuItem>
-              <MenuItem key={'Contact Us'} onClick={handleCloseNavMenu}>
-                <Typography onClick={() => navigate(`/contactus`)} textAlign="center">CONTACT US</Typography>
-              </MenuItem>
-            </Menu>
+            <SwipeableTemporaryDrawer />
+
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
+          <Typography variant="h5" noWrap component="a" href=""
             sx={{
-              mr: 2,
               display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              flexGrow: 1, fontFamily: 'monospace',
+              fontWeight: 700, letterSpacing: '.3rem',
+              color: 'inherit', textDecoration: 'none',
             }}
           >
-            BLOGIFIE
+            BLOGIFIED
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button
-              key='Home'
-              // onClick={handleCloseNavMenu}
-              onClick={() => navigate(`/`)}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            > HOME
-            </Button>
-            <Button
-              key='New Blog'
-              onClick={() => navigate('/newblog')}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            > NEW BLOG
-            </Button>
-            <Button
-              key='ContactUs'
-              // onClick={handleCloseNavMenu}
-              onClick={() => navigate(`/contactus`)}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            > CONTACT US
-            </Button>
+          <Box sx={{ ml: 5, flexGrow: 1, gap: 3, color: 'white', display: { xs: 'none', md: 'flex' } }}>
+            {[{ value: "HOME", link: '/' }, { value: "NEW BLOG", link: '/newblog' }, { value: "MY BLOGS", link: '/myblogs' }]
+              .map(({ value, link }) => {
+                return (
+                  <Link to={link} key={value}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  > <Typography color={'Background'}>
+                      {value}
+                    </Typography>
+                  </Link>
+                )
+              })}
           </Box>
 
           {/* right side user image code */}
 
           <Box sx={{ flexGrow: 0 }}>
-            <Button sx={{ my: 2, color: 'white', display: 'inline' }}>{user ? `Hey ${user.userName}` : 'sign in cheyy mwonu'}
-            </Button>
+            <Typography sx={{ m: 2, color: 'white', display: 'inline' }}>
+              {user ? `Welcome back ${user.userName}` : 'sign in cheyy mwonu'}
+            </Typography>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Image" src={user ? user.userImageURL : ''} />
+                <Avatar alt="User Image" src={user ? user.userImageURL : 'B'} />
               </IconButton>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
+              id="menu-appbar" anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
@@ -193,7 +123,8 @@ function NavBar() {
                     sessionStorage.clear();
                   }).catch((error) => {
                     console.log(error);
-                  })}>{'Logout'}</Typography>
+                  })}>{'Logout'}
+                  </Typography>
                 </MenuItem>] :
 
                 [<MenuItem key={'login'} onClick={handleCloseUserMenu}>
@@ -207,7 +138,7 @@ function NavBar() {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 }
 export default NavBar;
