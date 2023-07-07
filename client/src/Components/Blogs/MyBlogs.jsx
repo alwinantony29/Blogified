@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link, redirect, } from 'react-router-dom';
+import { Link,  } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
 import { Box, Button, Container, Stack, Typography, styled } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 export function MyBlogs() {
   const [blogData, setblogData] = useState([])
+
   // function to load blogs from server 
   const loader = async () => {
     await axiosInstance.get(`/blogs/myblogs`).then((response) => {
       setblogData(response.data.result)
     })
   }
-  const deleteBlog = (ID) => {
+  const deleteBlog = async(ID) => {
     if (confirm("U sure u wanna delete that")) {
-      axiosInstance.delete(`/blogs/${ID}`).then(() => {
-        console.log('blog deleted');
-        redirect('/myblogs')
-      })
-    } else { alert("cancelled") }
+      const response=await axiosInstance.delete(`/blogs/${ID}`)
+        console.log(response.data.message);
+        setblogData(blogData.filter(({_id})=>{return _id!==ID}))
+    }
   }
   useEffect(() => {
     loader()
@@ -46,9 +49,9 @@ export function MyBlogs() {
                       <Button >Read more</Button>
                     </Link>
                     <Link to={`/edit/${_id}`}>
-                      <Button  > edit </Button>
+                      <Button  > <EditIcon/> </Button>
                     </Link>
-                    <Button onClick={() => deleteBlog(_id)} >delete</Button>
+                    <Button onClick={() => deleteBlog(_id)} ><DeleteIcon/></Button>
                   </FlexBox>
                 </Stack>
                 <FlexBox sx={{ width: "40%", maxHeight: "auto", borderRadius: 3 }}>
@@ -58,7 +61,6 @@ export function MyBlogs() {
           })}
         </Stack>
       </Container>
-
     </>
   );
 }

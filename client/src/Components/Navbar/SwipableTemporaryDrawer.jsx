@@ -1,7 +1,6 @@
-import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
@@ -15,7 +14,7 @@ import { IconButton } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function SwipeableTemporaryDrawer() {
-    const [isDrawerOpen, setisDrawerOpen] = React.useState(false);
+    const [isDrawerOpen, setisDrawerOpen] = useState(false);
     const toggleDrawer = (open) => (event) => {
         if (
             event &&
@@ -58,7 +57,7 @@ export default function SwipeableTemporaryDrawer() {
         <div>
             <IconButton
                 size="large"
-                aria-label="account of current user"
+                aria-label="Drawer"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={toggleDrawer(true)}

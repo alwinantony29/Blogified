@@ -1,30 +1,31 @@
 import React, { useContext, useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import AdbIcon from '@mui/icons-material/Adb';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import { MenuItem, Tooltip, Button, Avatar, Container, Menu, Typography, AppBar, Box, Toolbar } from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
-import { useToast } from "@chakra-ui/toast"
+// import { useToast } from "@chakra-ui/toast"
 import SwipeableTemporaryDrawer from './SwipableTemporaryDrawer';
 
 function NavBar() {
-  const toast = useToast()
+  // const toast = useToast()
 
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
   const [anchorElUser, setAnchorElUser] = useState(null);
   useEffect(() => {
     setUser(JSON.parse(sessionStorage.getItem("user")))
-    toast({
-      title: "Account created.",
-      description: "We've created your account for you.",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    })
-
+    // toast({
+    //   title: "Account created.",
+    //   description: "We've created your account for you.",
+    //   status: "success",
+    //   duration: 9000,
+    //   isClosable: true,
+    // })
+console.log(user);
   }, [])
 
   const handleOpenUserMenu = (event) => {
@@ -38,7 +39,7 @@ function NavBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AutoStoriesIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -61,7 +62,7 @@ function NavBar() {
             <SwipeableTemporaryDrawer />
 
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AutoStoriesIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography variant="h5" noWrap component="a" href=""
             sx={{
               display: { xs: 'flex', md: 'none' },
@@ -89,7 +90,7 @@ function NavBar() {
           {/* right side user image code */}
 
           <Box sx={{ flexGrow: 0 }}>
-            <Typography sx={{ m: 2, color: 'white', display: 'inline' }}>
+            <Typography sx={{ m: 2, color: 'white', display: {xs:"none",sm:'inline'} }}>
               {user ? `Welcome back ${user.userName}` : 'sign in cheyy mwonu'}
             </Typography>
             <Tooltip title="Open settings">

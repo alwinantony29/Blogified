@@ -9,7 +9,7 @@ function SingleBlog() {
   const [blog, setBlog] = useState({})
   const { blogID } = useParams()
 
-  // loading blog data from server
+  // loading blog data 
   const loader = async () => {
     await axiosInstance.get("/blogs/" + blogID).then((response) => {
       setBlog(response.data.result)

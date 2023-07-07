@@ -52,7 +52,7 @@ export default function EditBlog() {
     event.preventDefault();
     try {
       const response = await axiosInstance.put(`/blogs/${blog._id}`, { blog });
-      alert(response);
+      alert(response.data.message);
       navigate('/myblogs');
     } catch (error) {
       alert('An error occurred while updating the blog:' + error);

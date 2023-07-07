@@ -46,9 +46,9 @@ Router.route('/')
 
     .post(verifyToken, async (req, res) => {
         try {
-            const { heading, content, authorName, authorImageURL, blogImageURL } = req.body.blogData
+            const { heading, content,blogImageURL } = req.body.blog
             const authorID = req.user._id
-            const createdBlog = new blogs({ heading, content, authorName, authorImageURL, blogImageURL, authorID })
+            const createdBlog = new blogs({ heading, content, blogImageURL, authorID })
             await createdBlog.save()
             res.json({ message: "Blog created successfully" });
         } catch (error) {

@@ -28,8 +28,11 @@ export function Blogs() {
       <Container maxWidth='md' sx={{ my: 3 }}>
         <Stack gap={4}>
           {blogData.map(({ _id, heading, content, blogImageURL, createdAt, authorID: user }) => { //destructuring values
-            console.log(user);
-            createdAt = new Date(createdAt).toLocaleDateString()
+            // console.log(user);
+            createdAt = new Date(createdAt)
+            const options = { month: 'long', day: 'numeric' };
+            createdAt = createdAt.toLocaleDateString('en-US', options);
+            content = content.slice(0, 200) + "...";
             return (
               <FlexBetween key={_id}>
                 <Stack sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
@@ -38,14 +41,16 @@ export function Blogs() {
                     <Typography>{createdAt}</Typography>
                   </FlexBox>
                   <Typography variant='h5' sx={{ fontWeight: '700' }}>{heading}</Typography>
-                  <Typography>{content}.</Typography>
+                  <Typography sx={{ display: { xs: "none", md: "flex" } }}>{content}</Typography>
                   {/* add category */}
                   <Link to={`/blogs/${_id}`}>
                     <Button sx={{ alignSelf: 'flex-start' }}  >Read more</Button>
                   </Link>
                 </Stack>
-                <FlexBox sx={{ width: "40%", maxHeight: "auto", borderRadius: 3 }}>
-                  <img src={blogImageURL} alt="blog image" />
+                <FlexBox sx={{ alignItems:'center' }}>
+                  <Box component="img" src={blogImageURL}
+                    sx={{ maxHeight: {xs:"20vh",md:"30vh"}, borderRadius: 3, aspectRatio: { xs: "6/5", md: "2/1" } }}
+                    alt="blog image" />
                 </FlexBox>
               </FlexBetween>)
           })}

@@ -1,8 +1,7 @@
 require('dotenv').config()
-// console.log(process.env)
-const Auth=require('./API/auth')
+const Auth = require('./API/auth')
 const cors = require('cors')
-const Blogs=require('./API/blog')
+const Blogs = require('./API/blog')
 const express = require('express')
 const connectDB = require('./mongooseConfig')
 const app = express()
@@ -10,11 +9,12 @@ const app = express()
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 app.use(express.json())
-app.use('/auth',Auth)
-app.use('/blogs',Blogs)
+app.use('/auth', Auth)
+app.use('/blogs', Blogs)
 
 // connecting to database 
-connectDB().then(()=>{ 
-    app.listen(process.env.PORT || 5000, () => { console.log('server started at 5000'); })
+connectDB().then(() => {
+    console.log(process.env.PORT);
+    // Starting the server
+    app.listen(process.env.PORT || 5000, () => { console.log('server started '); })
 })
-// Starting the server

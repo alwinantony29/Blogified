@@ -1,19 +1,8 @@
 import { useState } from 'react';
 import {
-    Avatar,
-    Button,
-    CssBaseline,
-    TextField,
-    FormControlLabel,
-    Checkbox,
-    Link,
-    Grid,
-    Box,
-    Typography,
-    Container,
-    createTheme,
-    ThemeProvider,
-    Stack,
+    Avatar,Button,CssBaseline,TextField,
+    FormControlLabel,Checkbox,Link,Grid,Box, Typography,
+    Container,createTheme,ThemeProvider,Stack,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -51,9 +40,10 @@ export default function CreateBlog() {
         event.preventDefault();
         try {
             const response = await axiosInstance.post('/blogs', { blog })
+            console.log(response.data);
             navigate('/')
         } catch (err) {
-            alert("" + err);
+            console.log(err);
         }
     };
 
