@@ -5,18 +5,13 @@ import React, { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { userContext } from '../../Context/userContext';
-import { axiosInstance } from '../../config/axios';
+import { axiosInstance, updateToken } from '../../config/axios';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -48,6 +43,7 @@ export default function Login() {
         sessionStorage.setItem('token', token);
         setUser(user)
         sessionStorage.setItem('user', JSON.stringify(user))
+        updateToken(token)
         // IdP data available using getAdditionalUserInfo(result)
         navigate('/')
 
@@ -107,6 +103,7 @@ export default function Login() {
               label="Remember me"
             /> */}
             <Button
+              autoFocus
               type="submit"
               fullWidth
               variant="contained"

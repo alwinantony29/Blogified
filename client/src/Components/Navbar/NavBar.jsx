@@ -1,18 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
-import AdbIcon from '@mui/icons-material/Adb';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import { MenuItem, Tooltip, Button, Avatar, Container, Menu, Typography, AppBar, Box, Toolbar } from '@mui/material';
+import { MenuItem, Tooltip, Avatar, Container, Menu, Typography, AppBar, Box, Toolbar } from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
 // import { useToast } from "@chakra-ui/toast"
 import SwipeableTemporaryDrawer from './SwipableTemporaryDrawer';
+import { updateToken } from '../../config/axios';
 
 function NavBar() {
   // const toast = useToast()
-
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -25,8 +24,20 @@ function NavBar() {
     //   duration: 9000,
     //   isClosable: true,
     // })
-console.log(user);
   }, [])
+  const handleLogout=()=>{
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      console.log('logout succesfull')
+      setUser(null)
+      updateToken(null)
+      // Clear the entire sessionStorage
+      sessionStorage.clear();
+      navigate('/login')
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -116,15 +127,7 @@ console.log(user);
               {/* if user loggedIn then show logout else show login buttons */}
               {user ? [
                 <MenuItem key={'logout'} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" onClick={() => signOut(auth).then(() => {
-                    // Sign-out successful.
-                    console.log('logout succesfull')
-                    setUser(null)
-                    // Clear the entire sessionStorage
-                    sessionStorage.clear();
-                  }).catch((error) => {
-                    console.log(error);
-                  })}>{'Logout'}
+                  <Typography textAlign="center" onClick={handleLogout}>{'Logout'}
                   </Typography>
                 </MenuItem>] :
 

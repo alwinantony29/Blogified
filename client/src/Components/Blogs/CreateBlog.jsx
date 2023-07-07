@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
-    Avatar,Button,CssBaseline,TextField,
-    FormControlLabel,Checkbox,Link,Grid,Box, Typography,
-    Container,createTheme,ThemeProvider,Stack,
+    Avatar, Button, CssBaseline, TextField,
+    FormControlLabel, Checkbox, Link, Grid, Box, Typography,
+    Container, createTheme, ThemeProvider, Stack, CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -69,8 +69,33 @@ export default function CreateBlog() {
                     />
                     <input type="file" required onChange={handleImage} />
                     {blog.blogImageURL &&
-                        <img src={blog.blogImageURL}
-                            style={{ opacity: uploading ? "50%" : "100%", width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="blog image" />
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: '15rem',
+                                borderRadius: '10px',
+                            }}
+                        >
+                            <Box
+                                component='img'
+                                src={blog.blogImageURL}
+                                sx={{
+                                    opacity: uploading ? '50%' : '100%',
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: '10px',
+                                }}
+                                alt="blog image"
+                            />
+                            {uploading && (
+                                <CircularProgress size={60}  sx={{color:"white", overflow: 'hidden', position: 'absolute' }} />
+                            )}
+                        </Box>
+
                     }
                     <TextField
                         variant='standard'

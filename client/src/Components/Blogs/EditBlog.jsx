@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
 import { Stack } from '@mui/material';
-
+import CircularProgress from '@mui/material/CircularProgress';
 const defaultTheme = createTheme();
 
 export default function EditBlog() {
@@ -77,14 +77,32 @@ export default function EditBlog() {
 
         <div style={{ position: 'relative', display: 'inline-block' }}>
           {blog.blogImageURL &&
-            <img
-              src={blog.blogImageURL}
-              style={{
-                opacity: uploading ? '50%' : '100%',
-                width: '100%', height: '15rem', borderRadius: '10px',
-              }}
-              alt="blog image"
+            <Box
+            sx={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '15rem',
+                borderRadius: '10px',
+            }}
+        >
+            <Box
+                component='img'
+                src={blog.blogImageURL}
+                sx={{
+                    opacity: uploading ? '50%' : '100%',
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '10px',
+                }}
+                alt="blog image"
             />
+            {uploading && (
+                <CircularProgress size={60}  sx={{color:"white", overflow: 'hidden', position: 'absolute' }} />
+            )}
+        </Box>
           }
           <input
             type="file"
@@ -111,7 +129,7 @@ export default function EditBlog() {
           autoFocus
         />
         <TextField
-        
+
           variant='standard'
           multiline
           required

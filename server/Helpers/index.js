@@ -9,6 +9,7 @@ module.exports={
         }
         jwt.verify(token.split(' ')[1], process.env.JWT_KEY, (err, decoded) => {
           if (err) {
+            console.log(token);
             return res.status(401).json({ message: 'Invalid token' });
           }
           // Save the decoded information to the request object

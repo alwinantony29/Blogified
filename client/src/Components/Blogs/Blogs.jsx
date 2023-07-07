@@ -28,7 +28,6 @@ export function Blogs() {
       <Container maxWidth='md' sx={{ my: 3 }}>
         <Stack gap={4}>
           {blogData.map(({ _id, heading, content, blogImageURL, createdAt, authorID: user }) => { //destructuring values
-            // console.log(user);
             createdAt = new Date(createdAt)
             const options = { month: 'long', day: 'numeric' };
             createdAt = createdAt.toLocaleDateString('en-US', options);
@@ -47,9 +46,9 @@ export function Blogs() {
                     <Button sx={{ alignSelf: 'flex-start' }}  >Read more</Button>
                   </Link>
                 </Stack>
-                <FlexBox sx={{ alignItems:'center' }}>
+                <FlexBox sx={{ alignItems: 'center' }}>
                   <Box component="img" src={blogImageURL}
-                    sx={{ maxHeight: {xs:"20vh",md:"30vh"}, borderRadius: 3, aspectRatio: { xs: "6/5", md: "2/1" } }}
+                    sx={{ maxHeight: { xs: "20vh", md: "30vh" }, borderRadius: 3, aspectRatio: { xs: "6/5", md: "2/1" } }}
                     alt="blog image" />
                 </FlexBox>
               </FlexBetween>)

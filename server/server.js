@@ -14,7 +14,7 @@ app.use('/blogs', Blogs)
 
 // connecting to database 
 connectDB().then(() => {
-    console.log(process.env.PORT);
+    console.log("port"+process.env.PORT);
     // Starting the server
-    app.listen(process.env.PORT || 5000, () => { console.log('server started '); })
+    app.listen(process.env.PORT, () => { console.log('server started'); })
 })
