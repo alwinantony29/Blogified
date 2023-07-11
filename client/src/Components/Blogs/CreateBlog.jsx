@@ -92,7 +92,7 @@ export default function CreateBlog() {
                                 alt="blog image"
                             />
                             {uploading && (
-                                <CircularProgress size={60}  sx={{color:"white", overflow: 'hidden', position: 'absolute' }} />
+                                <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
                             )}
                         </Box>
 

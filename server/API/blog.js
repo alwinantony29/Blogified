@@ -8,10 +8,14 @@ const Router = express.Router()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Router.get('/myblogs', verifyToken, async (req, res) => {
-    try {
-        const result = await blogs.find({ authorID: req.user._id }).lean()
-        res.json({ result })
 
+    const page = req.query.page
+    try {
+        const result = await blogs.find({ authorID: req.user._id })
+            .select("-authorID") // Exclude the authorID field
+            .lean().skip((page - 1) * 10)
+            .limit(10).exec()
+        res.json({ result })
     } catch (error) {
         console.log(error.message);
         res.status(500).send({ message: 'An error occurred while fetching your blogs' + error.message });
@@ -20,14 +24,17 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
 Router.route('/')
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////         Get all blogs        /////////////////////////////////////
+    ////////////////////////////////         Get 10 blogs        /////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     .get(async (req, res) => {
+        
+        const page = req.query.page
         try {
             const result = await blogs.find({})
                 .populate("authorID", "-_id") // Exclude the _id field
-                .lean().exec()
+                .lean().skip((page - 1) * 10)
+                .limit(10).exec()
             // this is what renaming authorID to user looks like, let client side deal with that
             // const result = data.map(blog => {
             //     return { ...blog, user: blog.authorID }
@@ -46,7 +53,7 @@ Router.route('/')
 
     .post(verifyToken, async (req, res) => {
         try {
-            const { heading, content,blogImageURL } = req.body.blog
+            const { heading, content, blogImageURL } = req.body.blog
             const authorID = req.user._id
             const createdBlog = new blogs({ heading, content, blogImageURL, authorID })
             await createdBlog.save()
