@@ -12,10 +12,11 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
     const page = req.query.page
     try {
         const result = await blogs.find({ authorID: req.user._id })
-            .select("-authorID") // Exclude the authorID field
+            .select("-authorID") // Excluding the authorID field
             .lean().skip((page - 1) * 10)
             .limit(10).exec()
-        res.json({ result })
+        const totalDocuments = await blogs.countDocuments({ authorID: req.user._id });
+        res.json({ result, totalDocuments })
     } catch (error) {
         console.log(error.message);
         res.status(500).send({ message: 'An error occurred while fetching your blogs' + error.message });
@@ -23,8 +24,8 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
 })
 Router.route('/')
 
-    //////////////////////////////         Get 10 blogs based on page   
-    //////////////////////////////          query : page  
+    ////////////////////////////// Get 10 blogs based on page   
+    ////////////////////////////// query : page  
 
     .get(async (req, res) => {
 

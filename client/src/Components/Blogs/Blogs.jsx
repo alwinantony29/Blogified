@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
 import "./style.css"
-import { Box, Button, Container, Stack, Typography, styled } from '@mui/material';
+import { Box, Button, Container, Stack, Typography, styled, Pagination } from '@mui/material';
+
 export async function loader() {
   try {
     const response = await axiosInstance.get("/blogs")
@@ -14,14 +15,17 @@ export async function loader() {
 }
 
 export function Blogs() {
+  const navigate=useNavigate()
   const [blogData, setblogData] = useState([])
   const data = useLoaderData()
-
   useEffect(() => {
     setblogData(data);
   }, [data])
   const FlexBox = styled(Box)({ display: 'flex' })
   const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
+  const handlePage=(event,value)=>{
+    console.log("handle page: "+value);
+  }
   return (
     <>
 
@@ -53,6 +57,9 @@ export function Blogs() {
                 </FlexBox>
               </FlexBetween>)
           })}
+
+          <Pagination onChange={handlePage} count={10} color="primary" />
+
         </Stack>
       </Container>
 

@@ -1,25 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Link, } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
-import { Box, Button, Container, Stack, Typography, styled } from '@mui/material';
+import { Box, Button, Container, Pagination, Stack, Typography, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export function MyBlogs() {
   const [blogData, setblogData] = useState([])
-
+  const [totalPages, setTotalPages] = useState(0)
   // function to load blogs from server 
-  const loader = async () => {
-    await axiosInstance.get(`/blogs/myblogs`).then((response) => {
-      setblogData(response.data.result)
-    })
+  const loader = async (pageNumber) => {
+    try {
+      const response = await axiosInstance.get(`/blogs/myblogs?page=${pageNumber ? pageNumber : 1}`)
+      const { result, totalDocuments } = response.data
+      setblogData(result)
+      setTotalPages(Math.ceil(totalDocuments/10))
+    } catch (err) {
+      console.log(err);
+    }
   }
   const deleteBlog = async (ID) => {
     if (confirm("U sure u wanna delete that")) {
+      try{
       const response = await axiosInstance.delete(`/blogs/${ID}`)
       console.log(response.data.message);
       setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
+    }catch(err){
+      console.log(err);
     }
+    }
+  }
+  const handlePage = (event, value) => {
+    loader(value)
   }
   useEffect(() => {
     loader()
@@ -30,9 +42,8 @@ export function MyBlogs() {
 
   return (
     <>
-
-      <Container maxWidth='md' sx={{ my: 3 }}>
-        <Stack gap={4}>
+      <Container maxWidth='md' sx={{ my: 5 }}>
+        <Stack gap={4} sx={{alignItems:'center'}}>
           {blogData.map(({ _id, heading, content, blogImageURL, createdAt }) => { //destructuring values            
             createdAt = new Date(createdAt)
             const options = { month: 'long', day: 'numeric' };
@@ -64,6 +75,8 @@ export function MyBlogs() {
                 </FlexBox>
               </FlexBetween>)
           })}
+          <Pagination onChange={handlePage} count={totalPages} defaultPage={1} siblingCount={2} color="primary" />
+
         </Stack>
       </Container>
     </>
