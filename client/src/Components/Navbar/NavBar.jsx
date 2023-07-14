@@ -70,7 +70,8 @@ function NavBar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <SwipeableTemporaryDrawer />
+
+            <SwipeableTemporaryDrawer />  {/* drawer for mobile devices */}
 
           </Box>
           <AutoStoriesIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -84,7 +85,7 @@ function NavBar() {
           >
             BLOGIFIED
           </Typography>
-          <Box sx={{ ml: 5, flexGrow: 1, gap: 3, color: 'white', display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{display: { xs: 'none', md: 'flex' }, ml: 5, flexGrow: 1, gap: 3, color: 'white', }}>
             {[{ value: "HOME", link: '/' }, { value: "NEW BLOG", link: '/newblog' }, { value: "MY BLOGS", link: '/myblogs' }]
               .map(({ value, link }) => {
                 return (

@@ -8,55 +8,59 @@ import EditIcon from '@mui/icons-material/Edit';
 export function MyBlogs() {
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
+  const FlexBox = styled(Box)({ display: 'flex' })
+  const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
+
   // function to load blogs from server 
-  const loader = async (pageNumber) => {
+  const loader = async (pageNumber = 1) => {
+    console.log("page: " + pageNumber);
     try {
-      const response = await axiosInstance.get(`/blogs/myblogs?page=${pageNumber ? pageNumber : 1}`)
+      const response = await axiosInstance.get(`/blogs/myblogs?page=${pageNumber}`)
       const { result, totalDocuments } = response.data
       setblogData(result)
-      setTotalPages(Math.ceil(totalDocuments/10))
+      setTotalPages(Math.ceil(totalDocuments / 10))
     } catch (err) {
       console.log(err);
     }
   }
+
   const deleteBlog = async (ID) => {
     if (confirm("U sure u wanna delete that")) {
-      try{
-      const response = await axiosInstance.delete(`/blogs/${ID}`)
-      console.log(response.data.message);
-      setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
-    }catch(err){
-      console.log(err);
-    }
+      try {
+        const response = await axiosInstance.delete(`/blogs/${ID}`)
+        console.log(response.data.message);
+        setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
+
   const handlePage = (event, value) => {
     loader(value)
   }
+
   useEffect(() => {
     loader()
   }, [])
 
-  const FlexBox = styled(Box)({ display: 'flex' })
-  const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
-
   return (
     <>
       <Container maxWidth='md' sx={{ my: 5 }}>
-        <Stack gap={4} sx={{alignItems:'center'}}>
+        <Stack gap={4} sx={{ alignItems: 'center' }}>
+
           {blogData.map(({ _id, heading, content, blogImageURL, createdAt }) => { //destructuring values            
             createdAt = new Date(createdAt)
             const options = { month: 'long', day: 'numeric' };
             createdAt = createdAt.toLocaleDateString('en-US', options);
             content = content.slice(0, 200) + "...";
             return (
-              <FlexBetween key={_id}>
+
+              <FlexBetween key={_id} gap={2} width={"100%"}>
                 <Stack sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
-                  <FlexBox gap={1}>
-                    <Typography>{createdAt}</Typography>
-                  </FlexBox>
+                  <Typography>{createdAt}</Typography>
                   <Typography variant='h5' sx={{ fontWeight: '700' }}>{heading}</Typography>
-                  <Typography sx={{ display: { xs: "none", md: "flex" } }}>{content}</Typography>
+                  <Typography sx={{ display: { xs: "none", sm: "flex" } }}>{content}</Typography>
                   {/* add category */}
                   <FlexBox gap={1}>
                     <Link to={`/blogs/${_id}`}>
@@ -70,13 +74,18 @@ export function MyBlogs() {
                 </Stack>
                 <FlexBox sx={{ alignItems: 'center' }}>
                   <Box component="img" src={blogImageURL}
-                    sx={{ maxHeight: { xs: "20vh", md: "30vh" }, borderRadius: 3, aspectRatio: { xs: "6/5", md: "2/1" } }}
-                    alt="blog image" />
+                    sx={{
+                      height: { xs: "20vh", sm: "25vh", md: "30vh" }, borderRadius: 3,
+                      objectFit: 'cover', width: { xs: "40vw", lg: "30vw" }
+                    }} alt="blog image" />
                 </FlexBox>
               </FlexBetween>)
           })}
-          <Pagination onChange={handlePage} count={totalPages} defaultPage={1} siblingCount={2} color="primary" />
-
+          {totalPages > 1 &&
+            <Pagination
+              onChange={handlePage} count={totalPages} defaultPage={1}
+              siblingCount={1} color="primary"
+            />}
         </Stack>
       </Container>
     </>

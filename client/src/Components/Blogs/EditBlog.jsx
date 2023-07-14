@@ -49,6 +49,7 @@ export default function EditBlog() {
       alert(err);
     }
   }
+  
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {

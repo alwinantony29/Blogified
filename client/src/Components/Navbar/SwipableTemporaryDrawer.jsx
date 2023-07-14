@@ -39,11 +39,11 @@ export default function SwipeableTemporaryDrawer() {
                     [{ value: "HOME", link: '/' }, { value: "NEW BLOG", link: '/newblog' }, { value: "MY BLOGS", link: '/myblogs' }]
                         .map(({ value, link }) => (
                             <ListItem key={value} disablePadding >
-                                <Link to={link} > <ListItemButton>
+                                <Link to={link} sx={{textDecoration:"none"}} > <ListItemButton>
                                     <ListItemIcon>
                                         {2 % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                                     </ListItemIcon>
-                                    <ListItemText sx={{ textDecorationLine: 'none' }} primary={value} />
+                                    <ListItemText sx={{textDecoration:"none"}} primary={value} />
                                 </ListItemButton>
                                 </Link>
                             </ListItem>

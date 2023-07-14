@@ -3,9 +3,8 @@ const { blogs } = require('../models/blog')
 const { verifyToken } = require('../Helpers')
 const Router = express.Router()
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////     Get blogs written by current signed in user     //////////////////////
-/////////////////////////////////   query : page      /////////////////////////////////////////////
+//////////////   Get blogs written by current signed in user and total count
+//////////////   query : page      
 
 Router.get('/myblogs', verifyToken, async (req, res) => {
 
@@ -24,8 +23,8 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
 })
 Router.route('/')
 
-    ////////////////////////////// Get 10 blogs based on page   
-    ////////////////////////////// query : page  
+    ///////////////////  Get 10 blogs based on page  and total count 
+    ///////////////////  query : page  
 
     .get(async (req, res) => {
 
@@ -35,21 +34,20 @@ Router.route('/')
                 .populate("authorID", "-_id") // Exclude the _id field
                 .lean().skip((page - 1) * 10)
                 .limit(10).exec()
-            // this is what renaming authorID to user looks like, let client side deal with that
+            // this is what renaming authorID to user looks like, let client side deal with that :)
             // const result = data.map(blog => {
             //     return { ...blog, user: blog.authorID }
             // })
             //     .map(({ authorID, ...rest }) => rest);
+            const totalDocuments = await blogs.countDocuments();
 
-            res.json({ result })
+            res.json({ result,totalDocuments })
         } catch (error) {
             console.log(error.message);
             res.status(500).json({ message: 'An error occurred while fetching blogs : ' + error.message });
         }
     })
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////         create a new blog        //////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////      create a new blog       /////////////////////////////
 
     .post(verifyToken, async (req, res) => {
         try {
