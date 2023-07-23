@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import {
-    Avatar, Button, CssBaseline, TextField,
-    FormControlLabel, Checkbox, Link, Grid, Box, Typography,
-    Container, createTheme, ThemeProvider, Stack, CircularProgress,
+    Button, TextField, Box, Typography, Container, createTheme, Stack, CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';

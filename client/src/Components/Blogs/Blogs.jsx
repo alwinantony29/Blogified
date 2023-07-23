@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
-import "./style.css"
 import { Box, Button, Container, Stack, Typography, styled, Pagination } from '@mui/material';
 
 export function Blogs() {
-  const navigate = useNavigate()
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
   const FlexBox = styled(Box)({ display: 'flex' })
@@ -24,6 +22,7 @@ export function Blogs() {
 
   useEffect(() => {
     loader()
+    console.log("blogs useffect")
   }, [])
 
   const handlePage = (event, value) => {
@@ -41,7 +40,7 @@ export function Blogs() {
             content = content.slice(0, 200) + "...";
             return (
               <FlexBetween gap={2} width={"100%"} key={_id}>
-                <Stack  sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
+                <Stack sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
                   <FlexBox gap={2}>
                     <Typography> {user.userName} </Typography>
                     <Typography>{createdAt}</Typography>
@@ -58,8 +57,9 @@ export function Blogs() {
                   <Box component="img" src={blogImageURL}
                     sx={{
                       height: { xs: "20vh", sm: "25vh", md: "30vh" }, borderRadius: 3,
-                      objectFit: 'cover', width: { xs: "40vw",lg:"30vw" }
+                      objectFit: 'cover', width: { xs: "40vw", lg: "30vw" }
                     }}
+                    loading='lazy'
                     alt="blog image" />
                 </FlexBox>
               </FlexBetween>)

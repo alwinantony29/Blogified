@@ -1,5 +1,4 @@
 import axios from "axios";
-
 let token = sessionStorage.getItem("token")
 // Function to update the token value dynamically when loggin in
 export const updateToken = (newToken) => {
@@ -8,7 +7,7 @@ export const updateToken = (newToken) => {
 // Creating an instance of Axios with default configuration
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: import.meta.env.VITE_BACKEND_URL,
 });
 // interceptor intercepts each request before sending them so that the 
 // token is updated efficiently in the header

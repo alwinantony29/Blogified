@@ -2,6 +2,8 @@ const express = require('express')
 const User = require('../models/user')
 const Router = express.Router()
 const jwt = require('jsonwebtoken');
+const { verifyToken } = require('../Helpers')
+
 Router.post("/signup", async (req, res) => {
     try {
         const { email, userName, userImageURL } = req.body.credentials
@@ -23,6 +25,14 @@ Router.post("/signup", async (req, res) => {
         console.log(err)
         res.status(500).send('An error occurred while signing in : ' + err.message)
     }
+})
+
+Router.get("/admin", verifyToken, async (req, res) => {
+    console.log(`Admin login request received :`, req.user._id)
+    if (req.user._id == process.env.ADMIN_ID) {
+        res.json({ mesage: "Hey Admin" })
+    } else
+        res.json({ message: "Intruder alert" })
 })
 
 module.exports = Router 

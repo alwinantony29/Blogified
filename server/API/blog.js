@@ -12,7 +12,7 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
     try {
         const result = await blogs.find({ authorID: req.user._id })
             .select("-authorID") // Excluding the authorID field
-            .lean().skip((page - 1) * 10)
+            .skip((page - 1) * 10)
             .limit(10).exec()
         const totalDocuments = await blogs.countDocuments({ authorID: req.user._id });
         res.json({ result, totalDocuments })
@@ -32,7 +32,7 @@ Router.route('/')
         try {
             const result = await blogs.find({})
                 .populate("authorID", "-_id") // Exclude the _id field
-                .lean().skip((page - 1) * 10)
+                .skip((page - 1) * 10)
                 .limit(10).exec()
             // this is what renaming authorID to user looks like, let client side deal with that :)
             // const result = data.map(blog => {
@@ -41,7 +41,7 @@ Router.route('/')
             //     .map(({ authorID, ...rest }) => rest);
             const totalDocuments = await blogs.countDocuments();
 
-            res.json({ result,totalDocuments })
+            res.json({ result, totalDocuments })
         } catch (error) {
             console.log(error.message);
             res.status(500).json({ message: 'An error occurred while fetching blogs : ' + error.message });
@@ -68,12 +68,12 @@ Router.route('/:blogID')
     ///////////////////////////////          get blog by ID             /////////////////////////////
 
     .get(async (req, res) => {
-        req.params.blogID
+        console.log("getting blog")
         try {
             const result = await blogs.findById(req.params.blogID)
                 .populate("authorID", "-_id") // Exclude the _id field
-                .lean().exec()
-
+                .exec()
+            console.log("type of date from db : ", typeof (result.createdAt));
             res.json({ result })
         } catch (err) {
             console.log(err.message);
@@ -87,7 +87,7 @@ Router.route('/:blogID')
             const result = await blogs.findByIdAndRemove(req.params.blogID)
             res.json({ message: "blog deleted succesfully" })
         } catch (error) {
-            console.log(error.message);
+            console.log("Error while deleting blog", error.message);
             res.status(500).json({ message: 'An error occurred while deleting the blog : ' + error.message })
         }
     })

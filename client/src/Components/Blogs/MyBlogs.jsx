@@ -41,6 +41,7 @@ export function MyBlogs() {
   }
 
   useEffect(() => {
+    console.log("Myblog useeffect");
     loader()
   }, [])
 

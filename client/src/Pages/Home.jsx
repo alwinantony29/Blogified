@@ -5,11 +5,10 @@ import { Outlet } from 'react-router-dom';
 function Home() {
   return (
     <>
-      <div style={{ backgroundColor: "#808080", height: "1000vh" }}>
-      <NavBar />
+      {/* <div style={{ backgroundColor: "#808080", height: "380vh" }}> */}
+        <NavBar />
         <Outlet />
-      </div>
-
+      {/* </div> */}
     </>
   )
 }

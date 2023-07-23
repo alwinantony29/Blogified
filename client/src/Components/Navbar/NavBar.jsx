@@ -5,33 +5,25 @@ import { MenuItem, Tooltip, Avatar, Container, Menu, Typography, AppBar, Box, To
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from '../../Context/userContext';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/firebase';
-// import { useToast } from "@chakra-ui/toast"
+import { auth } from '../../config/firebase';
 import SwipeableTemporaryDrawer from './SwipableTemporaryDrawer';
 import { updateToken } from '../../config/axios';
 
 function NavBar() {
-  // const toast = useToast()
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
   const [anchorElUser, setAnchorElUser] = useState(null);
   useEffect(() => {
+    console.log("navbar useEffect");
     setUser(JSON.parse(sessionStorage.getItem("user")))
-    // toast({
-    //   title: "Account created.",
-    //   description: "We've created your account for you.",
-    //   status: "success",
-    //   duration: 9000,
-    //   isClosable: true,
-    // })
   }, [])
   const handleLogout=()=>{
     signOut(auth).then(() => {
       // Sign-out successful.
       console.log('logout succesfull')
+      // Clear everything
       setUser(null)
       updateToken(null)
-      // Clear the entire sessionStorage
       sessionStorage.clear();
       navigate('/login')
     }).catch((error) => {
@@ -137,6 +129,9 @@ function NavBar() {
                 </MenuItem>]}
               <MenuItem key={'myblogs'} onClick={handleCloseUserMenu}>
                 <Typography textAlign="center" onClick={() => navigate('/myblogs')} >My Blogs</Typography>
+              </MenuItem>
+              <MenuItem key={'myprofile'} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center" onClick={() => navigate('/myprofile')} >My Profile</Typography>
               </MenuItem>
 
             </Menu>

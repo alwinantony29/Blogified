@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Container from '@mui/material/Container';
-import { CssBaseline, Grid, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { axiosInstance } from '../../config/axios';
 
 function SingleBlog() {
@@ -12,26 +12,33 @@ function SingleBlog() {
   // loading blog data 
   const loader = async () => {
     await axiosInstance.get("/blogs/" + blogID).then((response) => {
-      setBlog(response.data.result)
+      const result = response.data.result
+      // lets convert the date, cause it was converted to string while getting here
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      result.createdAt = new Date(result.createdAt).toLocaleDateString('en-US', options)
+      setBlog(result)
     })
   }
 
   useEffect(() => {
+    console.log("view blog useeffect");
     loader()
   }, [])
   return (
     <>
-        <Container component="main" maxWidth="md">
-          <Stack gap={2} sx={{my:4,alignItems:'center'}}>
-            <img style={{ borderRadius: "20px", width: '40rem', height: "17rem" }} 
+      <Container component="main" maxWidth="md">
+        <Stack gap={2} sx={{ my: 4, alignItems: 'center' }}>
+          <Box component='img' sx={{
+            borderRadius: "20px",
+            width: { xs: '95%', sm: "30rem", md: '40rem' }, height: "17rem"
+          }}
             src={blog.blogImageURL} alt="blog image" />
-            <h1>{blog.heading}</h1>
-            <p>by {blog.authorID?.userName}</p>
-            <p> {blog.createdAt} </p>
-            <p> {blog.content} </p>
-          </Stack>
-        </Container>
-      
+          <h1>{blog.heading}</h1>
+          <p> {blog.authorID?.userName}  {blog.createdAt}</p>
+          <p> {blog.content} </p>
+        </Stack>
+      </Container>
+
     </>
   )
 }

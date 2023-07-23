@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
@@ -49,7 +48,7 @@ export default function EditBlog() {
       alert(err);
     }
   }
-  
+
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
@@ -62,25 +61,22 @@ export default function EditBlog() {
   };
 
   useEffect(() => {
+    console.log("edit blog useeffect");
     loader();
   }, []);
 
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 5 }}>
-      {/* <CssBaseline /> */}
       <Stack gap={3} textAlign={'center'}>
-
         <Typography component="h1" variant="h4">
           Edit Blog
         </Typography>
 
-        {/* <input type="file" onChange={handleImage} />
-          <img src={blog.blogImageURL} className='mt-3' style={{ opacity: uploading ? "50%" : "100%", width: "30 rem", height: "20rem", borderRadius: "10px" }} alt="" /> */}
-
+        {/* <input type="file" onChange={handleImage} /> */}
         <div style={{ position: 'relative', display: 'inline-block' }}>
           {blog.blogImageURL &&
             <Box
-            sx={{
+              sx={{
                 position: 'relative',
                 display: 'flex',
                 justifyContent: 'center',
@@ -88,23 +84,23 @@ export default function EditBlog() {
                 width: '100%',
                 height: '15rem',
                 borderRadius: '10px',
-            }}
-        >
-            <Box
+              }}
+            >
+              <Box
                 component='img'
                 src={blog.blogImageURL}
                 sx={{
-                    opacity: uploading ? '50%' : '100%',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '10px',
+                  opacity: uploading ? '50%' : '100%',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '10px',
                 }}
                 alt="blog image"
-            />
-            {uploading && (
-                <CircularProgress size={60}  sx={{color:"white", overflow: 'hidden', position: 'absolute' }} />
-            )}
-        </Box>
+              />
+              {uploading && (
+                <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
+              )}
+            </Box>
           }
           <input
             type="file"

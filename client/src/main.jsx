@@ -19,7 +19,7 @@ const router = createBrowserRouter(
       <Route path='/myblogs' element={<MyBlogs />} />
       <Route path="/blogs/:blogID" element={<SingleBlog />} />
       <Route path="/edit/:blogID" element={<EditBlog />} />
-      <Route path="contactus" element={<>Contact Page</>} />
+      <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
     </Route>
   ))
 ReactDOM.createRoot(document.getElementById('root')).render(
