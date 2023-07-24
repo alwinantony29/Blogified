@@ -6,8 +6,9 @@ const userSchema = new Schema({
     userName: { type: String, required: true },
     userImageURL: { type: String, required: true },
     likedBlogs: [{ type: Schema.Types.ObjectId, ref: 'blog' }],
-    about:String,
-    status:String,       //options:active,blocked,deleted
+    about: String,
+    status: { type: String, default: "active" },                   //options:active,blocked,deleted
+    verified: { type: Boolean, default: false },
 })
 const user = mongoose.model('user', userSchema)
 module.exports = user

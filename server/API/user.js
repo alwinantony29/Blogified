@@ -28,8 +28,10 @@ Router.route("/")
                 userName,
                 about,
             };
-            const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
-            console.log(updatedUser);
+            const updatedUser = await User
+                .findByIdAndUpdate(userId, updateData, { new: true, select: "-_id", }); // Exclude the 'id' field 
+
+            console.log("updated user: ", updatedUser);
             res.json({ message: "user details updated succesfully" })
 
         } catch (error) {
@@ -43,12 +45,19 @@ Router.route("/")
         console.log(req.body);
         const { userId, status } = req.body
         try {
-            const result = await User.findByIdAndUpdate(userId, { status }, { new: true })
+            const updatedUser = await User.findByIdAndUpdate(userId, { status }, { new: true, select: "-_id", })
+            if (!updatedUser) {
+                // The user with the provided ID was not found
+                console.log("User not found");
+                return res.status(404).json({ message: "User not found" });
+            }
+            // The user was successfully updated
+            console.log("Updated user:", updatedUser);
             res.json({ message: "user status updated succesfully" })
-            console.log("updated user: ", result);
+
         } catch (error) {
             console.log("Error in updating user status:", error);
-            res.status(500).json({ message: 'An error occurred while updating users status : ' + error.message });
+            res.status(500).json({ message: 'Internal server error : ' + error.message });
         }
     })
 
