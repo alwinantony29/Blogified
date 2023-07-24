@@ -27,12 +27,4 @@ Router.post("/signup", async (req, res) => {
     }
 })
 
-Router.get("/admin", verifyToken, async (req, res) => {
-    console.log(`Admin login request received :`, req.user._id)
-    if (req.user._id == process.env.ADMIN_ID) {
-        res.json({ mesage: "Hey Admin" })
-    } else
-        res.json({ message: "Intruder alert" })
-})
-
 module.exports = Router 

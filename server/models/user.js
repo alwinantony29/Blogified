@@ -6,6 +6,7 @@ const userSchema = new Schema({
     userName: { type: String, required: true },
     userImageURL: { type: String, required: true },
     likedBlogs: [{ type: Schema.Types.ObjectId, ref: 'blog' }],
+    about:String,
     status:String,       //options:active,blocked,deleted
 })
 const user = mongoose.model('user', userSchema)

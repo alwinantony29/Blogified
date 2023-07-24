@@ -1,7 +1,8 @@
 require('dotenv').config()
-const Auth = require('./API/auth')
 const cors = require('cors')
+const Auth = require('./API/auth')
 const Blogs = require('./API/blog')
+const Users = require('./API/user')
 const express = require('express')
 const connectDB = require('./mongooseConfig')
 const app = express()
@@ -11,6 +12,8 @@ app.use(cors())
 app.use(express.json())
 app.use('/auth', Auth)
 app.use('/blogs', Blogs)
+app.use('/users', Users)
+
 const data = require('./data.json');
 const { blogs } = require('./models/blog')
 
