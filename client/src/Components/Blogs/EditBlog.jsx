@@ -18,6 +18,7 @@ export default function EditBlog() {
   const { blogID } = useParams();
   const [blog, setBlog] = useState({});
   const [uploading, setUploading] = useState(false)
+  const [isSubmiting, setisSubmiting] = useState(false)
 
   const loader = async () => {
     try {
@@ -52,10 +53,12 @@ export default function EditBlog() {
   const handleUpdate = async (event) => {
     event.preventDefault();
     try {
+      setisSubmiting(true)
       const response = await axiosInstance.put(`/blogs/${blog._id}`, { blog });
       alert(response.data.message);
       navigate('/myblogs');
     } catch (error) {
+      setisSubmiting(false)
       alert('An error occurred while updating the blog:' + error);
     }
   };
@@ -143,7 +146,12 @@ export default function EditBlog() {
           variant="contained"
           onClick={handleUpdate}
         >
-          Update Blog
+          {
+            isSubmiting ?
+              <CircularProgress color='inherit' size={25} />
+              :
+              <Typography>Save Blog</Typography>
+          }
         </Button>
       </Stack>
     </Container>

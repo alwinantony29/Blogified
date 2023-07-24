@@ -1,22 +1,21 @@
 import { useState } from 'react';
-import {
-    Button, TextField, Box, Typography, Container, createTheme, Stack, CircularProgress,
+import { Button, TextField, Box, Typography, Container, Stack, CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { axiosInstance } from '../../config/axios';
 
-const defaultTheme = createTheme();
-
 export default function CreateBlog() {
     const navigate = useNavigate()
     const [blog, setBlog] = useState({});
-    const [uploading, setUploading] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
+    const [isSubmiting, setisSubmiting] = useState(false)
+
 
     const handleImage = async (event) => {
         setBlog({ ...blog, blogImageURL: URL.createObjectURL(event.target.files[0]) })
         try {
-            setUploading(true)
+            setIsUploading(true)
             const formData = new FormData();
             formData.append('file', event.target.files[0]);
             formData.append('upload_preset', 'upload_preset_name');
@@ -26,21 +25,22 @@ export default function CreateBlog() {
             )
             setBlog({ ...blog, blogImageURL: response.data.url })
             console.log('Image uploaded');
-            setUploading(false)
+            setIsUploading(false)
 
         } catch (err) {
             alert("" + err)
         }
-
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            setisSubmiting(true)
             const response = await axiosInstance.post('/blogs', { blog })
             console.log(response.data);
             navigate('/')
         } catch (err) {
+            setisSubmiting(false)
             console.log(err);
         }
     };
@@ -82,14 +82,14 @@ export default function CreateBlog() {
                                 component='img'
                                 src={blog.blogImageURL}
                                 sx={{
-                                    opacity: uploading ? '50%' : '100%',
+                                    opacity: isUploading ? '50%' : '100%',
                                     width: '100%',
                                     height: '100%',
                                     borderRadius: '10px',
                                 }}
                                 alt="blog image"
                             />
-                            {uploading && (
+                            {isUploading && (
                                 <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
                             )}
                         </Box>
@@ -112,7 +112,12 @@ export default function CreateBlog() {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Submit Blog
+                        {
+                            isSubmiting ?
+                                <CircularProgress color='inherit' size={25} />
+                                :
+                                <Typography>Save Blog</Typography>
+                        }
                     </Button>
                 </Stack>
             </Box>

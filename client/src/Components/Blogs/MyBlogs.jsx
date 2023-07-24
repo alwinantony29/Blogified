@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
-import { Box, Button, Container, Pagination, Stack, Typography, styled } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Container, Pagination, Stack, Typography, styled } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export function MyBlogs() {
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
+  const [isloading, setIsloading] = useState(false)
+
   const FlexBox = styled(Box)({ display: 'flex' })
   const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
 
@@ -15,11 +17,13 @@ export function MyBlogs() {
   const loader = async (pageNumber = 1) => {
     console.log("page: " + pageNumber);
     try {
+      setIsloading(true)
       const response = await axiosInstance.get(`/blogs/myblogs?page=${pageNumber}`)
       const { result, totalDocuments } = response.data
       setblogData(result)
       setTotalPages(Math.ceil(totalDocuments / 10))
     } catch (err) {
+      setIsloading(false)
       console.log(err);
     }
   }
@@ -47,6 +51,15 @@ export function MyBlogs() {
 
   return (
     <>
+    {/* loading animation  */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: 10 }}
+        open={isloading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {/* end of the loding animaition*/}
+
       <Container maxWidth='md' sx={{ my: 5 }}>
         <Stack gap={4} sx={{ alignItems: 'center' }}>
 
