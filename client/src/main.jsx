@@ -9,6 +9,7 @@ import { Blogs } from "./Components/Blogs/Blogs.jsx"
 import SingleBlog from './Components/Blogs/SingleBlog.jsx'
 import { MyBlogs } from './Components/Blogs/MyBlogs.jsx'
 import EditBlog from './Components/Blogs/EditBlog.jsx'
+import UsersList from './Components/Admin/usersList/usersList.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +21,7 @@ const router = createBrowserRouter(
       <Route path="/blogs/:blogID" element={<SingleBlog />} />
       <Route path="/edit/:blogID" element={<EditBlog />} />
       <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
-      <Route path="/admin" element={<>Admin Page Coming soon</>} />
+      <Route path="/admin" element={<UsersList/>} />
     </Route>
   ))
 ReactDOM.createRoot(document.getElementById('root')).render(

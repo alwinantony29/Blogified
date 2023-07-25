@@ -7,7 +7,7 @@ const userSchema = new Schema({
     userImageURL: { type: String, required: true },
     likedBlogs: [{ type: Schema.Types.ObjectId, ref: 'blog' }],
     about: String,
-    status: { type: String, default: "active" },                   //options:active,blocked,deleted
+    status: { type: String, default: "active" }, //options:active,blocked,deleted
     verified: { type: Boolean, default: false },
 })
 const user = mongoose.model('user', userSchema)
