@@ -8,8 +8,13 @@ Router.post("/signup", async (req, res) => {
     try {
         const { email, userName, userImageURL } = req.body.credentials
         let user = await User.findOne({ email: email });
-        if (user) console.log("user found");
-        else {
+        if (user) {
+            console.log("user found");
+            if (user.status === "blocked") {
+                console.log("user is blocked");
+                return res.status(423).json({ message: "User is blocked" })
+            }
+        } else {
             console.log("no user found, creating new user!");
             user = new User({ email, userName, userImageURL })
             await user.save()

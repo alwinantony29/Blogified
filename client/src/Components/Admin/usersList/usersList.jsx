@@ -37,7 +37,7 @@ const usersList = () => {
             console.log(error);
         }
     }
-    
+
     useEffect(() => {
         console.log("userList useEffect");
         loader()
@@ -95,14 +95,16 @@ const usersList = () => {
                                         key={_id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell component="th" scope="row">
-                                            <Avatar src={userImageURL} alt='user profile picture' />
+                                        <TableCell align="center" component="th" scope="row" sx={{ width: "100px" }}>
+                                            <Avatar src={userImageURL} alt={userName} />
                                         </TableCell>
                                         <TableCell align="center">{userName}</TableCell>
                                         <TableCell align="center">{email}</TableCell>
-                                        <TableCell align="center">{status}</TableCell>
+                                        <TableCell align="center" sx={{ width: "100px" }}>
+                                            {status}
+                                        </TableCell>
                                         <TableCell align="center">
-                                            <Button onClick={() => handleOptions(_id, status)} variant='outlined'>
+                                            <Button onClick={() => handleOptions(_id, status)} sx={{ width: "100px" }} variant='outlined'>
                                                 {status === "active" ? "Block" : "Unblock"}
                                             </Button>
                                         </TableCell>

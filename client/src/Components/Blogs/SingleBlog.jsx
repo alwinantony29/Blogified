@@ -27,13 +27,15 @@ function SingleBlog() {
   return (
     <>
       <Container component="main" maxWidth="md">
-        <Stack gap={2} sx={{ my: 4, alignItems: 'center' }}>
+        <Stack gap={1} sx={{ my: 4, alignItems: 'center',p:5 }}>
           <Box component='img' sx={{
             borderRadius: "20px",
             width: { xs: '95%', sm: "30rem", md: '40rem' }, height: "17rem"
           }}
             src={blog.blogImageURL} alt="blog image" />
-          <h1>{blog.heading}</h1>
+          <Box component='h1' sx={{ textAlign: 'center',my:3 }}>
+            {blog.heading}
+          </Box>
           <p> {blog.authorID?.userName}  {blog.createdAt}</p>
           <p> {blog.content} </p>
         </Stack>

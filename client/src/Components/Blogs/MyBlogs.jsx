@@ -22,6 +22,7 @@ export function MyBlogs() {
       const { result, totalDocuments } = response.data
       setblogData(result)
       setTotalPages(Math.ceil(totalDocuments / 10))
+      setIsloading(false)
     } catch (err) {
       setIsloading(false)
       console.log(err);
