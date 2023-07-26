@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Backdrop, Box, CircularProgress } from '@mui/material';
+import { Avatar, Backdrop, Box, Button, CircularProgress } from '@mui/material';
 import { axiosInstance } from '../../../config/axios';
 
 const usersList = () => {
@@ -27,7 +27,9 @@ const usersList = () => {
         try {
             setIsloading(true)
             const response = await axiosInstance.get("/users")
-            console.log(response);
+            const { allUsers } = response.data
+            setUsers(allUsers)
+            console.log(allUsers)
             setIsloading(false)
 
         } catch (error) {
@@ -35,10 +37,36 @@ const usersList = () => {
             console.log(error);
         }
     }
+    
     useEffect(() => {
         console.log("userList useEffect");
         loader()
     }, [])
+
+    const handleOptions = async (id, status) => {
+        try {
+            if (status === "active") status = "blocked"
+            else if (status === "blocked") status = "active"
+            console.log("updating ", id, " to", status)
+            const result = await axiosInstance.patch("/users", { userId: id, status })
+            const { updatedUser } = result.data
+            console.log(updatedUser)
+            const updatedArrayOfUsers = users.map(user => {
+                if (user._id === id) {
+                    user.status = updatedUser.status;
+                }
+                return user;
+            })
+            setUsers(updatedArrayOfUsers)
+        } catch (error) {
+            console.log(`Error updating ${id}:`, error?.response?.data?.message || error)
+        }
+    }
+
+    useEffect(() => {
+        console.log("users changed");
+    }, [users])
+
     return (
         <>
             <Backdrop
@@ -52,28 +80,36 @@ const usersList = () => {
                     <Table aria-label="user table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Dessert (100g serving)</TableCell>
-                                <TableCell align="right">Calories</TableCell>
-                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                                <TableCell>Profile pic</TableCell>
+                                <TableCell align="center">User&nbsp;Name</TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Status</TableCell>
+                                <TableCell align="center">Options</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
-                                </TableRow>
-                            ))}
+                            {users.map((user) => {
+                                const { _id, userName, email, status, userImageURL } = user
+                                return (
+                                    <TableRow
+                                        key={_id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            <Avatar src={userImageURL} alt='user profile picture' />
+                                        </TableCell>
+                                        <TableCell align="center">{userName}</TableCell>
+                                        <TableCell align="center">{email}</TableCell>
+                                        <TableCell align="center">{status}</TableCell>
+                                        <TableCell align="center">
+                                            <Button onClick={() => handleOptions(_id, status)} variant='outlined'>
+                                                {status === "active" ? "Block" : "Unblock"}
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            }
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

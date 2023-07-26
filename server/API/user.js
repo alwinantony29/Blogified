@@ -7,9 +7,9 @@ const User = require('../models/user')
 Router.route("/")
     .get(verifyToken, verifyAdmin, async (req, res) => {
         try {
-            const allusers = await User.find({})
-            console.log(allusers);
-            res.json({ allusers })
+            const allUsers = await User.find({})
+            console.log(allUsers)
+            res.json({ allUsers })
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'An error occurred while fetching users : ' + error.message });
@@ -42,7 +42,7 @@ Router.route("/")
 
     // updating user status
     .patch(verifyToken, async (req, res) => {
-        console.log(req.body);
+        console.log("req body", req.body)
         const { userId, status } = req.body
         try {
             const updatedUser = await User.findByIdAndUpdate(userId, { status }, { new: true, select: "-_id", })
@@ -53,7 +53,7 @@ Router.route("/")
             }
             // The user was successfully updated
             console.log("Updated user:", updatedUser);
-            res.json({ message: "user status updated succesfully" })
+            res.json({ message: "user status updated succesfully", updatedUser })
 
         } catch (error) {
             console.log("Error in updating user status:", error);
