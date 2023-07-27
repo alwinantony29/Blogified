@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
-import { Box, Button, Container, Stack, Typography, styled, Pagination, Avatar, Backdrop, CircularProgress, } from '@mui/material';
-
+import { Box, Container, Stack, styled, Pagination, Backdrop, CircularProgress, } from '@mui/material';
+import BlogCard from './BlogCard';
 export function Blogs() {
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
-  const [isloading, setIsloading] = useState(true)
-
-  const FlexBox = styled(Box)({ display: 'flex' })
-  const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
+  const [isloading, setIsloading] = useState(false)
 
   const loader = async (pageNumber = 1) => {
     try {
@@ -45,45 +41,51 @@ export function Blogs() {
 
       <Container maxWidth='md' sx={{ py: 5, }}>
         <Stack gap={4} sx={{ alignItems: 'center' }}>
-          {blogData.map(({ _id, heading, content, blogImageURL, createdAt, authorID: user }) => { //destructuring values
-            createdAt = new Date(createdAt)
-            const options = { month: 'long', day: 'numeric' };
-            createdAt = createdAt.toLocaleDateString('en-US', options);
-            content = content.slice(0, 200) + "...";
-            return (
-              <FlexBetween gap={2} width="100%" key={_id} >
-                <Stack sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
-                  <FlexBox gap={2} sx={{ alignItems: 'center' }}>
-                    <Avatar alt={user?.userName} src={user?.userImageURL} />
-                    <Typography> {user?.userName} </Typography>
-                    <Typography>{createdAt}</Typography>
-                  </FlexBox>
-                  <Typography variant='h5' sx={{ fontWeight: '700' }}>
-                    {heading}
-                  </Typography>
-                  <Typography sx={{ display: { xs: "none", sm: "flex" } }}>
-                    {content}
-                  </Typography>
-                  {/* add category */}
-                  <Link to={`/blogs/${_id}`}>
-                    <Button sx={{ alignSelf: 'flex-start' }}  >
-                      Read more
-                    </Button>
-                  </Link>
-                </Stack>
-                <FlexBox sx={{ alignItems: 'center' }}>
-                  <Box component="img" src={blogImageURL}
-                    sx={{
-                      height: { xs: "15vh", sm: "25vh", md: "30vh" }, borderRadius: 3,
-                      objectFit: 'cover', width: { xs: "40vw", lg: "30vw" }
-                    }}
-                    loading='lazy'
-                    alt="Blog image" />
-                </FlexBox>
-              </FlexBetween>
-            )
-          }
-          )}
+
+          {
+            blogData.map((data) => {
+
+              return (
+                <BlogCard data={data} isMyBlogs={false} key={data._id} />
+                //   <FlexBetween gap={2} width="100%" key={_id} >
+                //     <Stack sx={{ justifyContent: 'space-evenly', }} width={'50%'}>
+                //       <FlexBox gap={2} sx={{ alignItems: 'center' }}>
+                //         <Avatar src={user?.userImageURL} />
+                //         <Typography> {user?.userName} </Typography>
+                //         <Typography>{createdAt}</Typography>
+                //       </FlexBox>
+                //       <Link to={`/blogs/${_id}`} style={{ textDecoration: "none" }}>
+                //         <Typography color={'black'} variant='h5' sx={{ fontWeight: '700' }}>
+                //           {heading}
+                //         </Typography>
+                //         <Typography color={'black'} sx={{ display: { xs: "none", sm: "flex" } }}>
+                //           {content}
+                //         </Typography>
+                //         {/* add category */}
+                //         <FlexBox sx={{ justifyContent: 'end' }}>
+                //           <Button>
+                //             <FavoriteIcon color='warning' />
+                //           </Button>
+                //           <Typography>{likeCount}</Typography>
+                //           <Button onClick={() => handleBlogShare(_id)} variant="text" sx={{ alignSelf: 'flex-start' }}>
+                //             <ShareIcon />
+                //           </Button>
+                //         </FlexBox >
+                //       </Link>
+                //     </Stack>
+                //     <FlexBox sx={{ alignItems: 'center' }}>
+                //       <Box component="img" src={blogImageURL}
+                //         sx={{
+                //           height: { xs: "15vh", sm: "25vh", md: "30vh" }, borderRadius: 3,
+                //           objectFit: 'cover', width: { xs: "40vw", lg: "30vw" }
+                //         }}
+                //         loading='lazy'
+                //         alt="Blog image" />
+                //     </FlexBox>
+                //   </FlexBetween>
+              )
+            }
+            )}
 
           {totalPages > 1 &&
             <Pagination

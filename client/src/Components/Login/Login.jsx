@@ -1,7 +1,7 @@
 import { auth, provider } from '../../config/firebase';
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,18 +9,18 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { userContext } from '../../Context/userContext';
 import { axiosInstance, updateToken } from '../../config/axios';
+import { Backdrop, CircularProgress } from '@mui/material';
 
-const defaultTheme = createTheme();
 
 export default function Login() {
+  const [isloading, setIsloading] = useState(false)
   const { setUser } = useContext(userContext)
   const navigate = useNavigate()
 
   const handleSubmit = (event) => {
-
+    setIsloading(true)
     event.preventDefault();
     signInWithPopup(auth, provider)
       .then(async (result) => {
@@ -28,7 +28,7 @@ export default function Login() {
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const gogleToken = credential.accessToken;
         // The signed-in user info.
-        console.log("user logIn: ", result.user);
+        console.log("user logIn info : ", result.user);
         const { email, displayName: userName, uid: userID, photoURL: userImageURL } = result.user
         const response = await axiosInstance.post("/auth/signup", {
           credentials: {
@@ -47,6 +47,7 @@ export default function Login() {
         navigate('/')
 
       }).catch((error) => {
+        setIsloading(false)
         console.log(error);
         // const errorCode = error.code;
         // const errorMessage = error.message;
@@ -58,24 +59,31 @@ export default function Login() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+    <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: 10 }}
+        open={isloading}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          {/* <TextField
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -85,7 +93,7 @@ export default function Login() {
               autoComplete="email"
               autoFocus
             /> */}
-          {/* <TextField
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -95,20 +103,20 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
             /> */}
-          {/* <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-          <Button
-            autoFocus
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In with Google
-          </Button>
-          {/* <Grid container>
+            <Button
+              autoFocus
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In with Google
+            </Button>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -120,8 +128,9 @@ export default function Login() {
                 </Link>
               </Grid>
             </Grid> */}
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 }
