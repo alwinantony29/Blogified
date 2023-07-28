@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../config/axios';
-import { Box, Container, Stack, styled, Pagination, Backdrop, CircularProgress, } from '@mui/material';
+import { Box, Container, Stack, Pagination, Backdrop, CircularProgress, } from '@mui/material';
 import BlogCard from './BlogCard';
+import toast from 'react-hot-toast';
+
 export function Blogs() {
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
@@ -29,6 +31,7 @@ export function Blogs() {
   const handlePage = (event, value) => {
     loader(value)
   }
+  const notify = () => toast('Here is your toast.');
 
   return (
     <>
@@ -41,6 +44,7 @@ export function Blogs() {
 
       <Container maxWidth='md' sx={{ py: 5, }}>
         <Stack gap={4} sx={{ alignItems: 'center' }}>
+
 
           {
             blogData.map((data) => {

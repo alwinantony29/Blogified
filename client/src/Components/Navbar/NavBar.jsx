@@ -8,25 +8,27 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import SwipeableTemporaryDrawer from './SwipableTemporaryDrawer';
 import { updateToken } from '../../config/axios';
+import toast from 'react-hot-toast';
 
 function NavBar() {
   const navigate = useNavigate()
   const { user, setUser } = useContext(userContext)
   const [anchorElUser, setAnchorElUser] = useState(null);
   useEffect(() => {
-    console.log("navbar useEffect");
+    toast.loading("navbar useEffect ");
     setUser(JSON.parse(sessionStorage.getItem("user")))
   }, [])
   const handleLogout=()=>{
     signOut(auth).then(() => {
       // Sign-out successful.
-      console.log('logout succesfull')
+      toast('logout succesfull')
       // Clear everything
       setUser(null)
       updateToken(null)
       sessionStorage.clear();
       navigate('/login')
     }).catch((error) => {
+      toast('logout unsuccesfull')
       console.log(error);
     })
   }
@@ -37,6 +39,7 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
 
   return (
     <AppBar position="fixed">
