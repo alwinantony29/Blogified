@@ -12,19 +12,18 @@ Router.get('/myblogs', verifyToken, async (req, res) => {
     try {
         const result = await blogs.find({ authorID: req.user._id })
             .sort({ createdAt: -1 })  // Sort by createdAt field in descending order
-            .select("-authorID") // Excluding the authorID field
             .skip((page - 1) * 10)
             .limit(10).exec()
         const totalDocuments = await blogs.countDocuments({ authorID: req.user._id });
         if (totalDocuments === 0) {
-            // case when the user has no blogs
+            // when the user has no blogs
             return res.status(404).json({ message: "You haven't written any blogs." });
         }
         res.json({ result, totalDocuments });
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).send({ message: 'An error occurred while fetching your blogs' + error.message });
+        res.status(500).send({ message: 'Internal server error' + error.message });
     }
 })
 Router.route('/')
@@ -37,7 +36,7 @@ Router.route('/')
         const page = req.query.page
         try {
             const result = await blogs.find({})
-                .populate("authorID", "-_id") // Exclude the _id field
+                .populate("authorID")
                 .sort({ createdAt: -1 })  // Sort by createdAt field in descending order
                 .skip((page - 1) * 10)
                 .limit(10)
@@ -61,7 +60,7 @@ Router.route('/')
             res.json({ message: "Blog created successfully" });
         } catch (error) {
             console.log(error.message);
-            res.status(500).json({ message: 'An error occurred while creating the blog : ' + error.message });
+            res.status(500).json({ message: 'Internal server error : ' + error.message });
         }
     });
 
@@ -72,12 +71,15 @@ Router.route('/:blogID')
     .get(async (req, res) => {
         try {
             const result = await blogs.findById(req.params.blogID)
-                .populate("authorID", "-_id") // Exclude the _id field
+                .populate("authorID")
                 .exec()
+            if (result === null) {
+                return res.status(404).json({ message: "blog not found" })
+            }
             res.json({ result })
         } catch (err) {
             console.log("error while getting blog ", req.params.blogID, " ", err.message)
-            res.status(500).json({ message: 'An error occurred while fetching the blog: ' + err.message });
+            res.status(500).json({ message: 'Internal server error : ' + err.message });
         }
     })
 
@@ -88,7 +90,7 @@ Router.route('/:blogID')
             res.json({ message: "blog deleted succesfully" })
         } catch (error) {
             console.log("Error while deleting blog", error.message);
-            res.status(500).json({ message: 'An error occurred while deleting the blog : ' + error.message })
+            res.status(500).json({ message: 'Internal server error : ' + error.message })
         }
     })
 
@@ -108,7 +110,7 @@ Router.route('/:blogID')
             res.json({ message: 'Blog updated successfully' })
         } catch (error) {
             console.log('Error while updating blog:', error.message);
-            res.status(500).json({ message: 'An error occured while updating the blog' + error.message })
+            res.status(500).json({ message: 'Internal server error :' + error.message })
         }
     })
 

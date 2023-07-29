@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Button, Stack, Typography, styled, Avatar, } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { handleBlogShare, handleContent, handleDate } from '../../utils';
+import { handleBlogShare, handleContent, handleDate } from '../../helpers';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,8 +11,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
 
     const { _id, heading, content, blogImageURL, likeCount, createdAt, authorID: user } = data
-    const newContent = handleContent(content)
-    const newDate = handleDate(createdAt)
+    const trimmedContent = handleContent(content)
+    const modifiedDate = handleDate(createdAt)
     const FlexBox = styled(Box)({ display: 'flex' })
     const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
 
@@ -29,18 +29,18 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
                                 <Typography> {user?.userName} </Typography>
                             </>
                         }
-                        <Typography>{newDate}</Typography>
+                        <Typography>{modifiedDate}</Typography>
                     </FlexBox>
                     <Link to={`/blogs/${_id}`} style={{ textDecoration: "none" }}>
-                        <Typography color={'black'} variant='h5' sx={{ fontWeight: '700' }}>
+                        <Typography color={'black'} variant={"h6"} sx={{ fontWeight: '700' }}>
                             {heading}
                         </Typography>
                         <Typography color={'black'} sx={{ display: { xs: "none", sm: "flex" } }}>
-                            {newContent}
+                            {trimmedContent}
                         </Typography>
                     </Link>
                     {/* add category */}
-                    <FlexBox sx={{ justifyContent: 'end',alignItems:"center", flexWrap: 'wrap' }}>
+                    <FlexBox sx={{ justifyContent: 'end', alignItems: "center", flexWrap: 'wrap' }}>
                         <Button>
                             {
                                 false ?
@@ -56,9 +56,9 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
                         {
                             isMyBlogs &&
                             <>
-                                <Link to={`/edit/${_id}`}>
+                                <Link to={`/edit/${_id}`} style={{ textDecoration: "none" }}>
                                     {/* <Button  > */}
-                                        <EditIcon />
+                                    <EditIcon color='primary' />
                                     {/* </Button> */}
                                 </Link>
                                 <Button onClick={() => deleteBlog(_id)} ><DeleteIcon /></Button>

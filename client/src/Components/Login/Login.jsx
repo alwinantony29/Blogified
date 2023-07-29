@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import { userContext } from '../../Context/userContext';
 import { axiosInstance, updateToken } from '../../config/axios';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { toast } from 'react-hot-toast';
 
 
 export default function Login() {
@@ -38,7 +39,7 @@ export default function Login() {
         }
         )
         const { token, user } = response.data
-
+        toast.success("Login succesfull")
         sessionStorage.setItem('token', token);
         setUser(user)
         sessionStorage.setItem('user', JSON.stringify(user))
@@ -47,6 +48,7 @@ export default function Login() {
         navigate('/')
 
       }).catch((error) => {
+        toast.error("Something went wrong")
         setIsloading(false)
         console.log(error);
         // const errorCode = error.code;
@@ -66,6 +68,7 @@ export default function Login() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -83,6 +86,16 @@ export default function Login() {
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In with Google
+            </Button>
+            
             {/* <TextField
               margin="normal"
               required
@@ -107,15 +120,6 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
-              autoFocus
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In with Google
-            </Button>
             {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

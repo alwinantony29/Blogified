@@ -8,11 +8,11 @@ Router.route("/")
     .get(verifyToken, verifyAdmin, async (req, res) => {
         try {
             const allUsers = await User.find({})
-            console.log(allUsers)
+            // console.log(allUsers)
             res.json({ allUsers })
         } catch (error) {
             console.log(error);
-            res.status(500).json({ message: 'An error occurred while fetching users : ' + error.message });
+            res.status(500).json({ message: 'Internal server error : ' + error.message });
 
         }
     })
@@ -21,7 +21,7 @@ Router.route("/")
     .put(verifyToken, async (req, res) => {
         try {
             const userId = req.user._id
-            console.log(req.body);
+            // console.log(req.body);
             const { userImageURL, userName, about } = req.body
             const updateData = {
                 userImageURL,
@@ -29,14 +29,14 @@ Router.route("/")
                 about,
             };
             const updatedUser = await User
-                .findByIdAndUpdate(userId, updateData, { new: true, select: "-_id", }); // Exclude the 'id' field 
+                .findByIdAndUpdate(userId, updateData, { new: true })
 
             console.log("updated user: ", updatedUser);
             res.json({ message: "user details updated succesfully" })
 
         } catch (error) {
             console.log("error in updating user details", error);
-            res.status(500).json({ message: 'An error occurred while updating users details : ' + error.message });
+            res.status(500).json({ message: 'Internal server error : ' + error.message });
         }
     })
 
@@ -45,7 +45,7 @@ Router.route("/")
         console.log("req body", req.body)
         const { userId, status } = req.body
         try {
-            const updatedUser = await User.findByIdAndUpdate(userId, { status }, { new: true, select: "-_id", })
+            const updatedUser = await User.findByIdAndUpdate(userId, { status }, { new: true })
             if (!updatedUser) {
                 // The user with the provided ID was not found
                 console.log("User not found");
@@ -53,7 +53,7 @@ Router.route("/")
             }
             // The user was successfully updated
             console.log("Updated user:", updatedUser);
-            res.json({ message: "user status updated succesfully", updatedUser })
+            res.json({ message: " status updated succesfully", updatedUser })
 
         } catch (error) {
             console.log("Error in updating user status:", error);

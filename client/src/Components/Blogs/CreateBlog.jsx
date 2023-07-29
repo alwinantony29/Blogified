@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Button, TextField, Box, Typography, Container, Stack, CircularProgress,
+import {
+    Button, TextField, Box, Typography, Container, Stack, CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { axiosInstance } from '../../config/axios';
+import { toast } from 'react-hot-toast';
 
 export default function CreateBlog() {
     const navigate = useNavigate()
@@ -24,11 +26,12 @@ export default function CreateBlog() {
                 formData
             )
             setBlog({ ...blog, blogImageURL: response.data.url })
-            console.log('Image uploaded');
+            toast.success('Image uploaded');
             setIsUploading(false)
 
         } catch (err) {
-            alert("" + err)
+            toast.error("Couldn't upload image try again")
+            console.log(err)
         }
     }
 
@@ -38,9 +41,11 @@ export default function CreateBlog() {
             setisSubmiting(true)
             const response = await axiosInstance.post('/blogs', { blog })
             console.log(response.data);
+            toast.success("Blog posted")
             navigate('/')
         } catch (err) {
             setisSubmiting(false)
+            toast.error("Something went wrong")
             console.log(err);
         }
     };
@@ -89,9 +94,11 @@ export default function CreateBlog() {
                                 }}
                                 alt="blog image"
                             />
-                            {isUploading && (
-                                <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
-                            )}
+                            {
+                                isUploading && (
+                                    <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
+                                )
+                            }
                         </Box>
 
                     }

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
 import { Backdrop, Box, Button, CircularProgress, Container, Pagination, Stack, Typography, styled } from '@mui/material';
-
-import { handleDate } from '../../utils';
+import { handleDate } from '../../helpers';
 import BlogCard from './BlogCard';
-
+import { toast } from "react-hot-toast";
 export function MyBlogs() {
   const [blogData, setblogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
@@ -27,6 +26,7 @@ export function MyBlogs() {
 
     } catch (err) {
       setIsloading(false)
+      toast.error("Something went wrong")
       console.log(err);
     }
   }
@@ -38,6 +38,7 @@ export function MyBlogs() {
         console.log(response.data.message);
         setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
       } catch (err) {
+        toast.error("Couldn't delete")
         console.log(err);
       }
     }
@@ -48,7 +49,6 @@ export function MyBlogs() {
   }
 
   useEffect(() => {
-    console.log("Myblog useeffect");
     loader()
   }, [])
 
@@ -66,43 +66,25 @@ export function MyBlogs() {
       <Container maxWidth='md' sx={{ my: 5 }}>
         <Stack gap={4} sx={{ alignItems: 'center' }}>
 
-          {blogData.map((data) => {
-            // const { _id, heading, content, blogImageURL, createdAt } = data
-            // createdAt = handleDate(createdAt)
-            // content = handleContent(content)
-            return (
-              <BlogCard data={data} deleteBlog={deleteBlog} isMyBlogs={true} key={data._id} />
-              // <FlexBetween key={_id} gap={2} width={"100%"}>
-              //   <Stack sx={{ justifyContent: 'space-evenly' }} width={'50%'}>
-              //     <Typography>{createdAt}</Typography>
-              //     <Typography variant='h5' sx={{ fontWeight: '700' }}>{heading}</Typography>
-              //     <Typography sx={{ display: { xs: "none", sm: "flex" } }}>{content}</Typography>
-              //     {/* add category */}
-              //     <FlexBox gap={1}>
-              //       <Link to={`/blogs/${_id}`}>
-              //         <Button >Read more</Button>
-              //       </Link>
-              //       <Link to={`/edit/${_id}`}>
-              //         <Button  > <EditIcon /> </Button>
-              //       </Link>
-              //       <Button onClick={() => deleteBlog(_id)} ><DeleteIcon /></Button>
-              //     </FlexBox>
-              //   </Stack>
-              //   <FlexBox sx={{ alignItems: 'center' }}>
-              //     <Box component="img" src={blogImageURL}
-              //       sx={{
-              //         height: { xs: "20vh", sm: "25vh", md: "30vh" }, borderRadius: 3,
-              //         objectFit: 'cover', width: { xs: "40vw", lg: "30vw" }
-              //       }} alt="blog image" />
-              //   </FlexBox>
-              // </FlexBetween>
-            )
-          })}
-          {totalPages > 1 &&
+          {
+
+            blogData.map((data) => {
+              return (
+                <BlogCard data={data} deleteBlog={deleteBlog} isMyBlogs={true} key={data._id} />
+              )
+            })
+
+          }
+          
+          {
+
+            totalPages > 1 &&
             <Pagination
               onChange={handlePage} count={totalPages} defaultPage={1}
               siblingCount={1} color="primary"
-            />}
+            />
+
+          }
         </Stack>
       </Container>
     </>

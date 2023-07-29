@@ -21,10 +21,7 @@ Router.post("/signup", async (req, res) => {
         }
         const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_KEY);
         res.json({
-            token, user: {
-                email: email, userName: userName,
-                userImageURL: userImageURL
-            }
+            token, user: { email, userName, userImageURL }
         })
     } catch (err) {
         console.log(err)

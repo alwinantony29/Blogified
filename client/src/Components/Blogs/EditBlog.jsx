@@ -10,8 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../config/axios';
 import { Stack } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-
-const defaultTheme = createTheme();
+import { toast } from 'react-hot-toast';
 
 export default function EditBlog() {
   const navigate = useNavigate();
@@ -25,9 +24,10 @@ export default function EditBlog() {
       const response = await axiosInstance.get("/blogs/" + blogID);
       const blogData = response.data.result
       setBlog(blogData);
-      console.log('response from axios', blogData);
+      // console.log('response from axios', blogData);
     } catch (error) {
-      console.log('error occurred while loading blog:', error);
+      toast.error("something went wrong")
+      console.log('error while loading blog:', error);
     }
   };
 
@@ -46,7 +46,8 @@ export default function EditBlog() {
       setUploading(false)
 
     } catch (err) {
-      alert(err);
+      toast.error("Couldn't upload image")
+      console.log(err)
     }
   }
 
@@ -55,16 +56,17 @@ export default function EditBlog() {
     try {
       setisSubmiting(true)
       const response = await axiosInstance.put(`/blogs/${blog._id}`, { blog });
-      alert(response.data.message);
+      console.log(response.data.message);
+      toast.success("Blog updated")
       navigate('/myblogs');
     } catch (error) {
       setisSubmiting(false)
-      alert('An error occurred while updating the blog:' + error);
+      toast.error("Something went wrong")
+      console.log('An error occurred while updating the blog:' + error);
     }
   };
 
   useEffect(() => {
-    console.log("edit blog useeffect");
     loader();
   }, []);
 
@@ -75,49 +77,35 @@ export default function EditBlog() {
           Edit Blog
         </Typography>
 
-        {/* <input type="file" onChange={handleImage} /> */}
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          {blog.blogImageURL &&
+        <input type="file" onChange={handleImage} />
+        {blog.blogImageURL &&
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '15rem',
+              borderRadius: '10px',
+            }}
+          >
             <Box
+              component='img'
+              src={blog.blogImageURL}
               sx={{
-                position: 'relative',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                opacity: uploading ? '50%' : '100%',
                 width: '100%',
-                height: '15rem',
+                height: '100%',
                 borderRadius: '10px',
               }}
-            >
-              <Box
-                component='img'
-                src={blog.blogImageURL}
-                sx={{
-                  opacity: uploading ? '50%' : '100%',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '10px',
-                }}
-                alt="blog image"
-              />
-              {uploading && (
-                <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
-              )}
-            </Box>
-          }
-          <input
-            type="file"
-            onChange={handleImage}
-            style={{
-              position: 'absolute',
-              bottom: '0',
-              right: '0',
-              margin: '10px',
-              opacity: 70,
-              cursor: 'pointer',
-            }}
-          />
-        </div>
+              alt="blog image"
+            />
+            {uploading && (
+              <CircularProgress size={60} sx={{ color: "white", overflow: 'hidden', position: 'absolute' }} />
+            )}
+          </Box>
+        }
 
         <TextField
           variant='standard'
@@ -129,8 +117,8 @@ export default function EditBlog() {
           name="heading"
           autoFocus
         />
-        <TextField
 
+        <TextField
           variant='standard'
           multiline
           required
@@ -140,6 +128,7 @@ export default function EditBlog() {
           name="content"
           id="content"
         />
+
         <Button
           type="submit"
           fullWidth

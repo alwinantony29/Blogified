@@ -15,20 +15,19 @@ function NavBar() {
   const { user, setUser } = useContext(userContext)
   const [anchorElUser, setAnchorElUser] = useState(null);
   useEffect(() => {
-    toast.loading("navbar useEffect ");
     setUser(JSON.parse(sessionStorage.getItem("user")))
   }, [])
-  const handleLogout=()=>{
+  const handleLogout = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
-      toast('logout succesfull')
+      toast.success('logout succesfull')
       // Clear everything
       setUser(null)
       updateToken(null)
       sessionStorage.clear();
       navigate('/login')
     }).catch((error) => {
-      toast('logout unsuccesfull')
+      toast.error("Couldn't logout")
       console.log(error);
     })
   }
@@ -39,7 +38,7 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
+
 
   return (
     <AppBar position="fixed">
@@ -80,13 +79,13 @@ function NavBar() {
           >
             BLOGIFIED
           </Typography>
-          <Box sx={{display: { xs: 'none', md: 'flex' }, ml: 5, flexGrow: 1, gap: 3, color: 'white', }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 5, flexGrow: 1, gap: 3, color: 'white', }}>
             {[{ value: "HOME", link: '/' }, { value: "NEW BLOG", link: '/newblog' }, { value: "MY BLOGS", link: '/myblogs' }]
               .map(({ value, link }) => {
                 return (
-                  <Link to={link} key={value}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  > <Typography color={'Background'}>
+                  <Link to={link} key={value} style={{ textDecoration: "none" }}
+                    sx={{ my: 2, color: 'white', display: 'block', }}
+                  > <Typography color={'Background'} >
                       {value}
                     </Typography>
                   </Link>
@@ -97,8 +96,8 @@ function NavBar() {
           {/* right side user image code */}
 
           <Box sx={{ flexGrow: 0 }}>
-            <Typography sx={{ m: 2, color: 'white', display: {xs:"none",sm:'inline'} }}>
-              {user ? `Welcome back ${user.userName}` : 'sign in cheyy mwonu'}
+            <Typography sx={{ m: 2, color: 'white', display: { xs: "none", sm: 'inline' } }}>
+              {user ? `Welcome back ${user.userName}` : 'sign in cheyy'}
             </Typography>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -121,21 +120,30 @@ function NavBar() {
               onClose={handleCloseUserMenu}
             >
               {/* if user loggedIn then show logout else show login buttons */}
+
               {user ? [
+
                 <MenuItem key={'logout'} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center" onClick={handleLogout}>{'Logout'}
                   </Typography>
-                </MenuItem>] :
+                </MenuItem>,
+                <MenuItem key={'myblogs'} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center" onClick={() => navigate('/myblogs')} >My Blogs</Typography>
+                </MenuItem>,
+                <MenuItem key={'myprofile'} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center" onClick={() => navigate('/myprofile')} >My Profile</Typography>
+                </MenuItem>
 
-                [<MenuItem key={'login'} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" onClick={() => navigate('/login')} >Login</Typography>
-                </MenuItem>]}
-              <MenuItem key={'myblogs'} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={() => navigate('/myblogs')} >My Blogs</Typography>
-              </MenuItem>
-              <MenuItem key={'myprofile'} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={() => navigate('/myprofile')} >My Profile</Typography>
-              </MenuItem>
+              ] :
+
+                [
+
+                  <MenuItem key={'login'} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" onClick={() => navigate('/login')} >Login</Typography>
+                  </MenuItem>
+
+                ]
+              }
 
             </Menu>
           </Box>
