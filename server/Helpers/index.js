@@ -12,7 +12,7 @@ module.exports = {
         console.log("token verification error: ", token);
         return res.status(401).json({ message: 'Invalid token' });
       }
-      // Save the decoded information to the request object
+      // Saving the decoded information to the request object
       req.user = decoded;
       console.log("verified token", req.user);
       next();

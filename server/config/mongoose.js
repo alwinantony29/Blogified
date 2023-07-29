@@ -11,8 +11,8 @@ const connectDB = async () => {
             }
         );
         if (conn) console.log('database connected');
-    } catch (e) {
-        console.log(e.message);
+    } catch (error) {
+        console.log(error.message);
     }
 }
 module.exports = connectDB;
