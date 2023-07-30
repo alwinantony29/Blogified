@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Stack, Typography, styled, Avatar, } from '@mui/material';
+import { Box, Button, Stack, Typography, styled, Avatar, Divider, } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { handleBlogShare, handleContent, handleDate } from '../../helpers';
@@ -19,7 +19,7 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
 
     return (
         <div>
-            <FlexBetween gap={.5} width="100%" key={_id} >
+            <FlexBetween gap={.5} width="100%" key={_id} sx={{mb:4}} >
                 <Stack sx={{ justifyContent: 'space-evenly', }} width={'50%'}>
                     <FlexBox gap={2} sx={{ alignItems: 'center' }}>
                         {
@@ -77,6 +77,7 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
                         alt="Blog image" />
                 </FlexBox>
             </FlexBetween>
+            <Divider/>
         </div>
     )
 }

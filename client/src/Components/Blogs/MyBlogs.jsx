@@ -37,6 +37,7 @@ export function MyBlogs() {
         const response = await axiosInstance.delete(`/blogs/${ID}`)
         console.log(response.data.message);
         setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
+        toast.success("Deleted")
       } catch (err) {
         toast.error("Couldn't delete")
         console.log(err);
