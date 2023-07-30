@@ -41,7 +41,7 @@ export function Blogs() {
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      <Container maxWidth='md' sx={{ py: 5, }}>
+      <Container maxWidth='md' >
         <Stack gap={4} sx={{ alignItems: 'center' }}>
 
           {

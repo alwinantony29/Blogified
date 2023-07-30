@@ -1,5 +1,4 @@
 const express = require('express')
-const { blogs } = require('../models/blog')
 const { verifyToken, verifyAdmin } = require('../Helpers')
 const Router = express.Router()
 const User = require('../models/user')
@@ -7,13 +6,11 @@ const User = require('../models/user')
 Router.route("/")
     .get(verifyToken, verifyAdmin, async (req, res) => {
         try {
-            const allUsers = await User.find({})
-            // console.log(allUsers)
+            const allUsers = await User.find({ _id: { $ne: process.env.ADMIN_ID } })
             res.json({ allUsers })
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error : ' + error.message });
-
         }
     })
 
@@ -21,7 +18,6 @@ Router.route("/")
     .put(verifyToken, async (req, res) => {
         try {
             const userId = req.user._id
-            // console.log(req.body);
             const { userImageURL, userName, about } = req.body
             const updateData = {
                 userImageURL,
@@ -40,7 +36,7 @@ Router.route("/")
         }
     })
 
-    // updating user status
+    // updating user status to active or blocked
     .patch(verifyToken, async (req, res) => {
         console.log("req body", req.body)
         const { userId, status } = req.body
