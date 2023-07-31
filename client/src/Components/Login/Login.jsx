@@ -14,7 +14,7 @@ import { axiosInstance, updateToken } from '../../config/axios';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { toast } from 'react-hot-toast';
 
-
+ 
 export default function Login() {
   const [isloading, setIsloading] = useState(false)
   const { setUser } = useContext(userContext)
@@ -48,7 +48,7 @@ export default function Login() {
         navigate('/')
 
       }).catch((error) => {
-        toast.error("Something went wrong")
+        toast.error("Login failed")
         setIsloading(false)
         console.log(error);
         // const errorCode = error.code;

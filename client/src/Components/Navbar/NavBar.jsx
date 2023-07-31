@@ -69,7 +69,7 @@ function NavBar() {
 
           </Box>
           <AutoStoriesIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography variant="h5" noWrap component="a" href=""
+          <Typography variant="h5" noWrap component="a" href="/"
             sx={{
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1, fontFamily: 'monospace',
