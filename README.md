@@ -1,4 +1,8 @@
-## node.js and express for backend, react with vite as frontend framework & mongodb for database
+# Blogified
+
+## Objective
+The objective was to develop a full stack MERN application that allows users to write blogs and share it with the world
+Used node.js and express for backend, react with vite as frontend and mongodb for database
 
 # how to run
 - clone the repo
