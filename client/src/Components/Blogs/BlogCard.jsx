@@ -17,7 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
-  const [isLiked, setIsLiked] = useState(second);
+  const [isLiked, setIsLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(data.likeCount);
   const {
     _id,
