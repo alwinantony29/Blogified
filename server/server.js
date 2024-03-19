@@ -8,7 +8,7 @@ const connectDB = require("./config/mongoose");
 const app = express();
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({origin: 'https://blogified.vercel.app' }));
 app.use(express.json());
 app.use("/auth", Auth);
 app.use("/blogs", Blogs);
