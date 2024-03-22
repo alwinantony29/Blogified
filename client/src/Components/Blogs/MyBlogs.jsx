@@ -71,7 +71,7 @@ export function MyBlogs() {
 
             blogData.map((data) => {
               return (
-                <BlogCard data={data} deleteBlog={deleteBlog} isMyBlogs={true} key={data._id} />
+                <BlogCard data={data} deleteBlog={deleteBlog} isMyBlog={true} key={data._id} />
               )
             })
 

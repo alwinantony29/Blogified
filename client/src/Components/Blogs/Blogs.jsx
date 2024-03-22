@@ -49,7 +49,7 @@ export function Blogs() {
             blogData.map((data) => {
 
               return (
-                <BlogCard data={data} isMyBlogs={false} key={data._id} />
+                <BlogCard data={data} isMyBlog={false} key={data._id} />
               )
             })
 

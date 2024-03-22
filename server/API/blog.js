@@ -11,7 +11,7 @@ Router.get("/myblogs", verifyToken, async (req, res) => {
   try {
     const result = await blogs
       .find({ authorID: req.user._id })
-      .sort({ createdAt: -1 }) // Sort by createdAt field in descending order
+      .sort({ createdAt: -1 })
       .skip((page - 1) * 10)
       .limit(10)
       .exec();
@@ -105,10 +105,10 @@ Router.route("/:blogID")
   })
 
   ///////////////////////////////          delete blog by ID          /////////////////////////////
-  .delete(async (req, res) => {
+  .delete(verifyToken, async (req, res) => {
     try {
       const result = await blogs.findByIdAndRemove(req.params.blogID);
-      res.json({ message: "blog deleted succesfully" });
+      res.json({ message: "blog deleted successfully" });
     } catch (error) {
       console.log("Error while deleting blog", error.message);
       res
@@ -118,27 +118,36 @@ Router.route("/:blogID")
   })
 
   ///////////////////////////////          update blog by ID          /////////////////////////////
-  .put(async (req, res) => {
+  .put(verifyToken, async (req, res) => {
     try {
-      const { heading, content, blogImageURL } = req.body.blog;
+      const { heading, content, blogImageURL, isLiked } = req.body.blog;
+      if (isLiked === true) console.log(req.body.blog);
+      const userID = req.user._id;
       const result = await blogs.findByIdAndUpdate(
         req.params.blogID,
         {
           $set: {
-            heading: heading,
-            content: content,
-            blogImageURL: blogImageURL,
+            ...(heading ? { heading: heading } : {}),
+            ...(content ? { content: content } : {}),
+            ...(blogImageURL ? { blogImageURL: blogImageURL } : {}),
+            ...(isLiked === true
+              ? {
+                  [`likedBy.${userID}`]: true,
+                }
+              : {}),
+          },
+          $unset: isLiked === false ? { [`likedBy.${userID}`]: 1 } : {},
+          $inc: {
+            likeCount: isLiked === true ? 1 : isLiked === false ? -1 : 0,
           },
         },
-        { new: true } // This option returns the updated document
+        { new: true } // returns the updated document
       );
       console.log("Updated blog:", result);
       res.json({ message: "Blog updated successfully" });
     } catch (error) {
       console.log("Error while updating blog:", error.message);
-      res
-        .status(500)
-        .json({ message: "Internal server error :" + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 

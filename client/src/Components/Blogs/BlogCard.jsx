@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -15,8 +15,9 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { axiosInstance } from "../../config/axios";
 
-const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
+const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(data.likeCount);
   const {
@@ -26,7 +27,9 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
     blogImageURL,
     createdAt,
     authorID: user,
+    likedBy,
   } = data;
+
   const trimmedContent = handleContent(content);
   const modifiedDate = handleDate(createdAt);
   const FlexBox = styled(Box)({ display: "flex" });
@@ -34,10 +37,19 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
     display: "flex",
     justifyContent: "space-between",
   });
-  const handleLikeDislike = () => {
+  const handleLike = () => {
     setIsLiked((prev) => !prev);
-    if (isLiked) setTotalLikes((prev) => prev - 1);
-    else setTotalLikes((prev) => prev + 1);
+    setTotalLikes((prev) => prev + 1);
+    axiosInstance
+      .put(`/blogs/${_id}`, { blog: { isLiked: true } })
+      .catch(error);
+  };
+  const handleDislike = () => {
+    setTotalLikes((prev) => prev - 1);
+    setIsLiked((prev) => !prev);
+    axiosInstance
+      .put(`/blogs/${_id}`, { blog: { isLiked: false } })
+      .catch(error);
   };
 
   return (
@@ -45,7 +57,7 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
       <FlexBetween gap={0.5} width="100%" key={_id} sx={{ mb: 4 }}>
         <Stack sx={{ justifyContent: "space-evenly" }} width={"50%"}>
           <FlexBox gap={2} sx={{ alignItems: "center" }}>
-            {!isMyBlogs && (
+            {!isMyBlog && (
               <>
                 <Avatar src={user?.userImageURL} />
                 <Typography> {user?.userName} </Typography>
@@ -76,14 +88,17 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
               flexWrap: "wrap",
             }}
           >
-            <Button onClick={handleLikeDislike}>
-              {isLiked ? (
+            {isLiked ? (
+              <Button onClick={handleDislike}>
                 <FavoriteIcon color="warning" />
-              ) : (
+              </Button>
+            ) : (
+              <Button onClick={handleLike}>
                 <FavoriteBorderIcon color="warning" />
-              )}
-              <Typography sx={{ ml: 0.5 }}>{totalLikes}</Typography>
-            </Button>
+              </Button>
+            )}
+            <Typography sx={{ fontSize: "18px" }}>{totalLikes}</Typography>
+
             <Button
               onClick={() => handleBlogShare(_id)}
               variant="text"
@@ -91,12 +106,10 @@ const BlogCard = ({ data, isMyBlogs, deleteBlog }) => {
             >
               <ShareIcon />
             </Button>
-            {isMyBlogs && (
+            {isMyBlog && (
               <>
                 <Link to={`/edit/${_id}`} style={{ textDecoration: "none" }}>
-                  {/* <Button  > */}
                   <EditIcon color="primary" />
-                  {/* </Button> */}
                 </Link>
                 <Button onClick={() => deleteBlog(_id)}>
                   <DeleteIcon />
