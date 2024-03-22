@@ -8,9 +8,9 @@ const connectDB = async () => {
       //   useFindAndModify: false,
       useUnifiedTopology: true,
     });
-    if (conn) console.log("database connected");
+    if (!conn) throw "Something went wrong while connecting with the database";
   } catch (error) {
-    throw `Db connection failed: ${error.message}`;
+    throw `Database connection failed: ${error.message}`;
   }
 };
 module.exports = connectDB;

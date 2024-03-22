@@ -8,6 +8,7 @@ const blogSchema = new Schema({
   content: { type: String, required: true },
   blogImageURL: { type: String },
   likeCount: {type:Number,default:0},
+  likedBy: { type: Map, of: Boolean, default: {} },
   createdAt: {
     type: Date,
     default: Date.now

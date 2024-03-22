@@ -1,7 +1,7 @@
 const express = require('express')
 const User = require('../models/user')
 const Router = express.Router()
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); 
 const { verifyToken } = require('../Helpers')
 
 Router.post("/signup", async (req, res) => {
@@ -15,7 +15,6 @@ Router.post("/signup", async (req, res) => {
                 return res.status(423).json({ message: "User is blocked" })
             }
         } else {
-            console.log("no user found, creating new user!");
             user = new User({ email, userName, userImageURL })
             await user.save()
         }
