@@ -141,7 +141,7 @@ Router.route("/:blogID")
             likeCount: isLiked === true ? 1 : isLiked === false ? -1 : 0,
           },
         },
-        { new: true } // returns the updated document
+        { new: true } 
       );
       console.log("Updated blog:", result);
       res.json({ message: "Blog updated successfully" });

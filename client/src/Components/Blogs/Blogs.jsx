@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../config/axios';
-import { Box, Container, Stack, Pagination, Backdrop, CircularProgress, } from '@mui/material';
+import {  Container, Stack, Pagination, Backdrop, CircularProgress, } from '@mui/material';
 import BlogCard from './BlogCard';
 import toast from 'react-hot-toast';
 
 export function Blogs() {
-  const [blogData, setblogData] = useState([])
+  const [blogData, setBlogData] = useState([])
   const [totalPages, setTotalPages] = useState(0)
-  const [isloading, setIsloading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const loader = async (pageNumber = 1) => {
     try {
-      setIsloading(true)
+      setIsLoading(true)
       const response = await axiosInstance.get(`/blogs?page=${pageNumber}`)
       const { result, totalDocuments } = response.data
-      setblogData(result)
+      setBlogData(result)
       setTotalPages(Math.ceil(totalDocuments / 10))
-      setIsloading(false)
+      setIsLoading(false)
     } catch (err) {
-      setIsloading(false)
+      setIsLoading(false)
       toast.error("Something went wrong")
       console.log(err);
     }
@@ -36,7 +36,7 @@ export function Blogs() {
     <>
       <Backdrop
         sx={{ color: '#fff', zIndex: 10 }}
-        open={isloading}
+        open={isLoading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>

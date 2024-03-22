@@ -10,25 +10,27 @@ import {
 } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { handleBlogShare, handleContent, handleDate } from "../../helpers";
+import { handleBlogShare, handleContent, handleDate } from "@/helpers";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { axiosInstance } from "../../config/axios";
+import { axiosInstance } from "@/config/axios";
+import { useSelector } from "react-redux";
 
 const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [totalLikes, setTotalLikes] = useState(data.likeCount);
   const {
     _id,
     heading,
     content,
     blogImageURL,
     createdAt,
-    authorID: user,
+    authorID: author,
     likedBy,
   } = data;
+  const user = useSelector((state) => state.user.value);
+  const [isLiked, setIsLiked] = useState(likedBy[user._id] || false);
+  const [totalLikes, setTotalLikes] = useState(data.likeCount);
 
   const trimmedContent = handleContent(content);
   const modifiedDate = handleDate(createdAt);
@@ -59,8 +61,8 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
           <FlexBox gap={2} sx={{ alignItems: "center" }}>
             {!isMyBlog && (
               <>
-                <Avatar src={user?.userImageURL} />
-                <Typography> {user?.userName} </Typography>
+                <Avatar src={author?.userImageURL} />
+                <Typography> {author?.userName} </Typography>
               </>
             )}
             <Typography>{modifiedDate}</Typography>
@@ -80,7 +82,7 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
               {trimmedContent}
             </Typography>
           </Link>
-          {/* add category */}
+          {/* TODO: add category */}
           <FlexBox
             sx={{
               justifyContent: "end",
