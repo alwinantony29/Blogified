@@ -29,7 +29,7 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
     likedBy,
   } = data;
   const user = useSelector((state) => state.user.value);
-  const [isLiked, setIsLiked] = useState(likedBy[user._id] || false);
+  const [isLiked, setIsLiked] = useState(likedBy[user?._id] || false);
   const [totalLikes, setTotalLikes] = useState(data.likeCount);
 
   const trimmedContent = handleContent(content);
