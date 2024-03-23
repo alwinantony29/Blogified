@@ -1,95 +1,93 @@
-import React, { useEffect, useState } from 'react';
-import { Link, } from 'react-router-dom';
-import { axiosInstance } from '../../config/axios';
-import { Backdrop, Box, Button, CircularProgress, Container, Pagination, Stack, Typography, styled } from '@mui/material';
-import { handleDate } from '../../helpers';
-import BlogCard from './BlogCard';
+import React, { useEffect, useState } from "react";
+import { axiosInstance } from "../../config/axios";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  Container,
+  Pagination,
+  Stack,
+} from "@mui/material";
+import BlogCard from "./BlogCard";
 import { toast } from "react-hot-toast";
 export function MyBlogs() {
-  const [blogData, setblogData] = useState([])
-  const [totalPages, setTotalPages] = useState(0)
-  const [isloading, setIsloading] = useState(false)
+  const [blogs, setBlogs] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const FlexBox = styled(Box)({ display: 'flex' })
-  const FlexBetween = styled(Box)({ display: 'flex', justifyContent: 'space-between' })
-
-  // function to load blogs from server 
-  const loader = async (pageNumber = 1) => {
-    console.log("page: " + pageNumber);
+  const fetchBlogs = async (pageNumber = 1) => {
     try {
-      setIsloading(true)
-      const response = await axiosInstance.get(`/blogs/myblogs?page=${pageNumber}`)
-      const { result, totalDocuments } = response.data
-      setblogData(result)
-      setTotalPages(Math.ceil(totalDocuments / 10))
-      setIsloading(false)
-
+      setIsLoading(true);
+      const response = await axiosInstance.get(
+        `/blogs/myblogs?page=${pageNumber}`
+      );
+      const { result, totalDocuments } = response.data;
+      setBlogs(result);
+      setTotalPages(Math.ceil(totalDocuments / 10));
     } catch (err) {
-      setIsloading(false)
-      toast.error("Something went wrong")
+      toast.error("Something went wrong");
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   const deleteBlog = async (ID) => {
     if (confirm("U sure u wanna delete that")) {
       try {
-        const response = await axiosInstance.delete(`/blogs/${ID}`)
+        const response = await axiosInstance.delete(`/blogs/${ID}`);
         console.log(response.data.message);
-        setblogData(blogData.filter(({ _id }) => { return _id !== ID }))
-        toast.success("Deleted")
+        setBlogs(
+          blogs.filter(({ _id }) => {
+            return _id !== ID;
+          })
+        );
+        toast.success("Deleted");
       } catch (err) {
-        toast.error("Couldn't delete")
+        toast.error("Couldn't delete");
         console.log(err);
       }
     }
-  }
+  };
 
   const handlePage = (event, value) => {
-    loader(value)
-  }
+    fetchBlogs(value);
+  };
 
   useEffect(() => {
-    loader()
-  }, [])
+    fetchBlogs();
+  }, []);
 
   return (
     <>
-      {/* loading animation  */}
-      <Backdrop
-        sx={{ color: '#fff', zIndex: 10 }}
-        open={isloading}
-      >
+      <Backdrop sx={{ color: "#fff", zIndex: 10 }} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {/* end of the loding animaition*/}
 
-      <Container maxWidth='md' sx={{ my: 5 }}>
-        <Stack gap={4} sx={{ alignItems: 'center' }}>
+      <Container maxWidth="md" sx={{ my: 5 }}>
+        <Stack gap={4} sx={{ alignItems: "center" }}>
+          {blogs.map((data) => {
+            return (
+              <BlogCard
+                data={data}
+                deleteBlog={deleteBlog}
+                isMyBlog={true}
+                key={data._id}
+              />
+            );
+          })}
 
-          {
-
-            blogData.map((data) => {
-              return (
-                <BlogCard data={data} deleteBlog={deleteBlog} isMyBlog={true} key={data._id} />
-              )
-            })
-
-          }
-          
-          {
-
-            totalPages > 1 &&
+          {totalPages > 1 && (
             <Pagination
-              onChange={handlePage} count={totalPages} defaultPage={1}
-              siblingCount={1} color="primary"
+              onChange={handlePage}
+              count={totalPages}
+              defaultPage={1}
+              siblingCount={1}
+              color="primary"
             />
-
-          }
+          )}
         </Stack>
       </Container>
     </>
   );
 }
-
-

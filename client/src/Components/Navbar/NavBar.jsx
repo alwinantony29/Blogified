@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import {
@@ -13,23 +13,19 @@ import {
   Toolbar,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { userContext } from "../../Context/userContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import SwipeableTemporaryDrawer from "./SwipableTemporaryDrawer";
 import { updateToken } from "../../config/axios";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser } from "@/store/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser, setUser } from "@/store/user/userSlice";
 
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, setUser } = useContext(userContext);
+  const user = useSelector((state) => state.user.value);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  useEffect(() => {
-    setUser(JSON.parse(sessionStorage.getItem("user")));
-  }, []);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -38,16 +34,14 @@ function NavBar() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
-        toast.success("logout succesfull");
-        // Clear everything
-        setUser(null);
+        toast.success("Bye see ya");
+        dispatch(setUser(null));
         updateToken(null);
         sessionStorage.clear();
         navigate("/login");
       })
       .catch((error) => {
-        toast.error("Couldn't logout");
+        toast.error("Something went wrong");
         console.log(error);
       });
   };
@@ -85,7 +79,7 @@ function NavBar() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <SwipeableTemporaryDrawer /> {/* drawer for mobile devices */}
+            <SwipeableTemporaryDrawer /> {/* for mobile devices */}
           </Box>
           <AutoStoriesIcon
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
@@ -114,42 +108,42 @@ function NavBar() {
               flexGrow: 1,
               gap: 3,
               color: "white",
+              textDecoration: "none",
             }}
           >
-            {[
-              { value: "HOME", link: "/" },
-              { value: "NEW BLOG", link: "/newblog" },
-              { value: "MY BLOGS", link: "/myblogs" },
-            ].map(({ value, link }) => {
-              return (
-                <Link
-                  to={link}
-                  key={value}
-                  style={{ textDecoration: "none" }}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {" "}
-                  <Typography color={"Background"}>{value}</Typography>
-                </Link>
-              );
-            })}
+            <Link to={"/"} style={{ textDecoration: "none" }}>
+              <Typography color={"Background"}>HOME</Typography>
+            </Link>
+            <Link
+              to={user ? "/newblog" : "/login"}
+              style={{ textDecoration: "none" }}
+            >
+              <Typography color={"Background"}>NEW BLOG</Typography>
+            </Link>
+            {user && (
+              <Link to={"/myblogs"} style={{ textDecoration: "none" }}>
+                <Typography color={"Background"}>MY BLOGS</Typography>
+              </Link>
+            )}
           </Box>
 
-          {/* right side user image code */}
+          {/* Right side user avatar code */}
 
           <Box sx={{ flexGrow: 0 }}>
-            <Typography
-              sx={{
-                m: 2,
-                color: "white",
-                display: { xs: "none", sm: "inline" },
-              }}
-            >
-              {user ? `Welcome back ${user.userName}` : "sign in cheyy"}
-            </Typography>
+            {user && (
+              <Typography
+                sx={{
+                  m: 2,
+                  color: "white",
+                  display: { xs: "none", sm: "inline" },
+                }}
+              >
+                Welcome back {user?.userName}
+              </Typography>
+            )}
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Image" src={user ? user.userImageURL : "B"} />
+                <Avatar alt="User" src={user ? user.userImageURL : ""} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -177,7 +171,7 @@ function NavBar() {
                         {"Logout"}
                       </Typography>
                     </MenuItem>,
-                    <MenuItem key={"myblogs"} onClick={handleCloseUserMenu}>
+                    <MenuItem key={"my-blogs"} onClick={handleCloseUserMenu}>
                       <Typography
                         textAlign="center"
                         onClick={() => navigate("/myblogs")}
@@ -185,7 +179,7 @@ function NavBar() {
                         My Blogs
                       </Typography>
                     </MenuItem>,
-                    <MenuItem key={"myprofile"} onClick={handleCloseUserMenu}>
+                    <MenuItem key={"my-profile"} onClick={handleCloseUserMenu}>
                       <Typography
                         textAlign="center"
                         onClick={() => navigate("/myprofile")}

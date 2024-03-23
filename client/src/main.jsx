@@ -17,6 +17,7 @@ import UsersList from "./Components/Admin/usersList/usersList.jsx";
 import React from "react";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
+import PrivateRoute from "./Components/HOC/PrivateRoute.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +29,14 @@ const router = createBrowserRouter(
       <Route path="/blogs/:blogID" element={<SingleBlog />} />
       <Route path="/edit/:blogID" element={<EditBlog />} />
       <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
-      <Route path="/admin" element={<UsersList />} />
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute path="/admin" roles={["admin"]}>
+            <UsersList />
+          </PrivateRoute>
+        }
+      />
     </Route>
   )
 );

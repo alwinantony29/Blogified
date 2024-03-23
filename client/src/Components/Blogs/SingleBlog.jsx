@@ -1,71 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Container from '@mui/material/Container';
-import { Avatar, Backdrop, Box, CircularProgress, Stack, Typography } from '@mui/material';
-import { axiosInstance } from '../../config/axios';
-import { toast } from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Container from "@mui/material/Container";
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { axiosInstance } from "../../config/axios";
+import { toast } from "react-hot-toast";
 
 function SingleBlog() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [blog, setBlog] = useState({});
+  const { blogID } = useParams();
 
-  const [isloading, setIsloading] = useState(false)
-  const [blog, setBlog] = useState({})
-  const { blogID } = useParams()
-
-  // loading blog 
-  const loader = async () => {
+  const fetchBlog = async () => {
     try {
-      setIsloading(true)
-      const response = await axiosInstance.get("/blogs/" + blogID)
-      const result = response.data.result
-      // lets convert the date, cause it was converted to string while getting here
-      const options = { month: 'long', day: 'numeric', year: 'numeric' };
-      result.createdAt = new Date(result.createdAt).toLocaleDateString('en-US', options)
-      setBlog(result)
-      setIsloading(false)
-      
+      setIsLoading(true);
+      const response = await axiosInstance.get("/blogs/" + blogID);
+      const result = response.data.result;
+      const options = { month: "long", day: "numeric", year: "numeric" };
+      result.createdAt = new Date(result.createdAt).toLocaleDateString(
+        "en-US",
+        options
+      );
+      setBlog(result);
     } catch (error) {
-      setIsloading(false)
-      toast.error("Something went wrong")
+      toast.error("Something went wrong");
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loader()
-  }, [])
+    fetchBlog();
+  }, []);
 
   return (
     <>
-    <Backdrop
-        sx={{ color: '#fff', zIndex: 10 }}
-        open={isloading}
-      >
+      <Backdrop sx={{ color: "#fff", zIndex: 10 }} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <Container component="main" maxWidth="md" disableGutters>
-        <Stack gap={1} sx={{ my: 2, alignItems: 'center', }}>
-          <Box component='img' sx={{
-            borderRadius: "20px",
-            width: { xs: '100%', sm: "30rem", md: '40rem' }, height: "17rem"
-          }}
-            src={blog.blogImageURL} alt="blog image" />
+        <Stack gap={1} sx={{ my: 2, alignItems: "center" }}>
+          <Box
+            component="img"
+            sx={{
+              borderRadius: "20px",
+              width: { xs: "100%", sm: "30rem", md: "40rem" },
+              height: "17rem",
+            }}
+            src={blog.blogImageURL}
+            alt="blog image"
+          />
 
-          <Box component='h1' sx={{ textAlign: 'center', my: 3 }}>
+          <Box component="h1" sx={{ textAlign: "center", my: 3 }}>
             {blog.heading}
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: 'center' }} gap={2}>
+          <Box sx={{ display: "flex", alignItems: "center" }} gap={2}>
             <Avatar src={blog.authorID?.userImageURL} />
-            <p> {blog.authorID?.userName}  {blog.createdAt}</p>
+            <p>
+              {blog.authorID?.userName} &nbsp; &nbsp; {blog.createdAt}
+            </p>
           </Box>
 
           <Typography sx={{ p: 4 }}> {blog.content} </Typography>
-
         </Stack>
       </Container>
-
     </>
-  )
+  );
 }
 
-export default SingleBlog
+export default SingleBlog;

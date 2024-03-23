@@ -1,7 +1,7 @@
 import { auth, provider } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import React, { useContext, useState } from "react";
+import { signInWithPopup } from "firebase/auth";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,15 +9,16 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { userContext } from "../../Context/userContext";
 import { axiosInstance, updateToken } from "../../config/axios";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/user/userSlice";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useContext(userContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     setIsLoading(true);
@@ -44,11 +45,10 @@ export default function Login() {
           },
         });
         const { token, user } = response.data;
-        toast.success("Login successful");
+        dispatch(setUser(user));
+        toast.success(`Welcome back ${user.userName}`);
         sessionStorage.setItem("token", token);
-        setUser(user);
-        sessionStorage.setItem("user", JSON.stringify(user));
-        updateToken(token);
+        updateToken(token); // for axios instance
         navigate("/");
       })
       .catch((error) => {
