@@ -121,9 +121,8 @@ Router.route("/:blogID")
   .put(verifyToken, async (req, res) => {
     try {
       const { heading, content, blogImageURL, isLiked } = req.body.blog;
-      if (isLiked === true) console.log(req.body.blog);
       const userID = req.user._id;
-      const result = await blogs.findByIdAndUpdate(
+      await blogs.findByIdAndUpdate(
         req.params.blogID,
         {
           $set: {
@@ -141,9 +140,8 @@ Router.route("/:blogID")
             likeCount: isLiked === true ? 1 : isLiked === false ? -1 : 0,
           },
         },
-        { new: true } 
+        { new: true }
       );
-      console.log("Updated blog:", result);
       res.json({ message: "Blog updated successfully" });
     } catch (error) {
       console.log("Error while updating blog:", error.message);

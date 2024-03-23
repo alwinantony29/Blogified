@@ -5,11 +5,13 @@ const Blogs = require("./API/blog");
 const Users = require("./API/user");
 const express = require("express");
 const connectDB = require("./config/mongoose");
+const morgan = require('morgan');
 
 const app = express();
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors({ origin: "https://blogified.vercel.app" }));
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.use("/auth", Auth);
 app.use("/blogs", Blogs);
@@ -33,7 +35,9 @@ app.get("/insert-data", async (req, res) => {
 connectDB()
   .then(() => {
     app.listen(process.env.PORT || 3001, () => {
-      console.log("🚀 Server started at ", process.env.PORT || 3001);
+      console.log(
+        `🚀 Server started at http://localhost:${process.env.PORT || 3001}`
+      );
     });
   })
   .catch((error) => {
