@@ -49,7 +49,7 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
   // const isMenuOpen = Boolean(anchorEl);
   const trimmedContent = handleContent(content);
   createdAt = DateTime.fromISO(createdAt).toFormat("dd LLL");
-  const FlexBox = styled(Box)({ display: "flex" });
+  const FlexBox = styled(Box)({ display: "flex", alignItems: "center" });
   const FlexBetween = styled(Box)({
     display: "flex",
     justifyContent: "space-between",
@@ -114,15 +114,8 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
           </Link>
 
           {/* TODO: add category */}
-          <FlexBox
-            sx={{
-              justifyContent: "space-between",
-            }}
-          >
-            <FlexBox
-              gap={2}
-              sx={{ alignItems: "center", justifyContent: "start" }}
-            >
+          <FlexBetween>
+            <FlexBox gap={2}>
               {!isMyBlog && (
                 <>
                   <Avatar src={author?.userImageURL} />
@@ -133,7 +126,7 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
                 {createdAt}
               </Typography>
             </FlexBox>
-            <FlexBox sx={{ width: "140px", alignItems: "center" }}>
+            <FlexBox>
               {isLiked ? (
                 <Button onClick={handleDislike}>
                   <FavoriteIcon color="warning" />
@@ -152,21 +145,21 @@ const BlogCard = ({ data, isMyBlog, deleteBlog }) => {
               >
                 <ShareIcon />
               </Button>
-            </FlexBox>
-            {isMyBlog && (
-              <>
-                <Link to={`/edit/${_id}`} style={{ textDecoration: "none" }}>
-                  <EditIcon color="primary" />
-                </Link>
-                <Button onClick={() => deleteBlog(_id)}>
-                  <DeleteIcon />
-                </Button>
-              </>
-            )}
 
-          </FlexBox>
+              {isMyBlog && (
+                <>
+                  <Link to={`/edit/${_id}`} style={{ textDecoration: "none" }}>
+                    <EditIcon color="primary" />
+                  </Link>
+                  <Button onClick={() => deleteBlog(_id)}>
+                    <DeleteIcon />
+                  </Button>
+                </>
+              )}
+            </FlexBox>
+          </FlexBetween>
         </Stack>
-        <FlexBox sx={{ alignItems: "center" }}>
+        <FlexBox>
           <Box
             component="img"
             src={blogImageURL}

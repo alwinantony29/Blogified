@@ -4,11 +4,9 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-  
 } from "react-router-dom";
 import React, { lazy } from "react";
 
-import UserContext from "./Context/userContext.jsx";
 import RootLayout from "./Layout/RootLayout.jsx";
 import SignIn from "./Components/Login/Login.jsx";
 import { Blogs } from "./Components/Blogs/Blogs.jsx";
@@ -85,10 +83,8 @@ const router = createBrowserRouter(
 );
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <UserContext>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </UserContext>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

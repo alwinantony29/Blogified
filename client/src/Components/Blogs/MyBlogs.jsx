@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../config/axios";
 import {
   Backdrop,
-  Box,
   CircularProgress,
   Container,
   Pagination,
@@ -10,7 +9,7 @@ import {
 } from "@mui/material";
 import BlogCard from "./BlogCard";
 import { toast } from "react-hot-toast";
-export function MyBlogs() {
+export default function MyBlogs() {
   const [blogs, setBlogs] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
