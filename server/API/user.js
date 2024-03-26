@@ -26,23 +26,18 @@ Router.route("/")
         userName,
         about,
       };
-      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      await User.findByIdAndUpdate(userId, updateData, {
         new: true,
       });
 
-      console.log("updated user: ", updatedUser);
-      res.json({ message: "user details updated succesfully" });
+      res.json({ message: "User details updated successfully" });
     } catch (error) {
-      console.log("error in updating user details", error);
-      res
-        .status(500)
-        .json({ message: "Internal server error : " + error.message });
+      res.status(500).json({ message: error.message });
     }
   })
 
   // updating user status to active or blocked
   .patch(verifyToken, async (req, res) => {
-    console.log("req body", req.body);
     const { userId, status } = req.body;
     try {
       const updatedUser = await User.findByIdAndUpdate(
@@ -53,14 +48,10 @@ Router.route("/")
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      // The user was successfully updated
-      console.log("Updated user:", updatedUser);
+
       res.json({ message: " status updated successfully", updatedUser });
     } catch (error) {
-      console.log("Error in updating user status:", error);
-      res
-        .status(500)
-        .json({ message: "Internal server error : " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
