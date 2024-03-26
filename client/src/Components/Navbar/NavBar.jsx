@@ -187,6 +187,21 @@ function NavBar() {
                         My Profile
                       </Typography>
                     </MenuItem>,
+                    <>
+                      {user.role === "admin" && (
+                        <MenuItem
+                          key={"dashboard"}
+                          onClick={handleCloseUserMenu}
+                        >
+                          <Typography
+                            textAlign="center"
+                            onClick={() => navigate("/admin")}
+                          >
+                            Dashboard
+                          </Typography>
+                        </MenuItem>
+                      )}
+                    </>,
                   ]
                 : [
                     <MenuItem key={"login"} onClick={handleCloseUserMenu}>
