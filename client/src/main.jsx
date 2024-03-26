@@ -13,7 +13,7 @@ import { Blogs } from "./Components/Blogs/Blogs.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import PrivateRoute from "./Components/HOC/PrivateRoute.jsx";
-import LazyLoad from "./Components/LazyLoad.jsx";
+import LazyLoad from "./Components/HOC/LazyLoad.jsx";
 
 const UsersList = lazy(() =>
   import("./Components/Admin/usersList/usersList.jsx")
@@ -70,11 +70,11 @@ const router = createBrowserRouter(
       <Route
         path="/admin"
         element={
-          <LazyLoad>
-            <PrivateRoute path="/admin" roles={["admin"]}>
+          <PrivateRoute roles={["admin"]}>
+            <LazyLoad>
               <UsersList />
-            </PrivateRoute>
-          </LazyLoad>
+            </LazyLoad>
+          </PrivateRoute>
         }
       />
       <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
