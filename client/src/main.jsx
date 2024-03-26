@@ -1,42 +1,85 @@
 import ReactDOM from "react-dom/client";
-import UserContext from "./Context/userContext.jsx";
 import {
   Route,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
+  
 } from "react-router-dom";
-import Root from "./Layout/RootLayout.jsx";
+import React, { lazy } from "react";
+
+import UserContext from "./Context/userContext.jsx";
+import RootLayout from "./Layout/RootLayout.jsx";
 import SignIn from "./Components/Login/Login.jsx";
-import CreateBlog from "./Components/Blogs/CreateBlog.jsx";
 import { Blogs } from "./Components/Blogs/Blogs.jsx";
-import SingleBlog from "./Components/Blogs/SingleBlog.jsx";
-import { MyBlogs } from "./Components/Blogs/MyBlogs.jsx";
-import EditBlog from "./Components/Blogs/EditBlog.jsx";
-import UsersList from "./Components/Admin/usersList/usersList.jsx";
-import React from "react";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import PrivateRoute from "./Components/HOC/PrivateRoute.jsx";
+import LazyLoad from "./Components/LazyLoad.jsx";
+
+const UsersList = lazy(() =>
+  import("./Components/Admin/usersList/usersList.jsx")
+);
+const SingleBlog = lazy(() => import("./Components/Blogs/SingleBlog.jsx"));
+const MyBlogs = lazy(() => import("./Components/Blogs/MyBlogs.jsx"));
+const EditBlog = lazy(() => import("./Components/Blogs/EditBlog.jsx"));
+const CreateBlog = lazy(() => import("./Components/Blogs/CreateBlog.jsx"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
-      <Route index element={<Blogs />} />
-      <Route path="/login" element={<SignIn />} />
-      <Route path="/newblog" element={<CreateBlog />} />
-      <Route path="/myblogs" element={<MyBlogs />} />
-      <Route path="/blogs/:blogID" element={<SingleBlog />} />
-      <Route path="/edit/:blogID" element={<EditBlog />} />
-      <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
+    <Route path="/" element={<RootLayout />}>
+      <Route path="/" exact index element={<Blogs />} />
+      <Route
+        path="/login"
+        element={
+          <LazyLoad>
+            <SignIn />
+          </LazyLoad>
+        }
+      />
+      <Route
+        path="/newblog"
+        element={
+          <LazyLoad>
+            <CreateBlog />
+          </LazyLoad>
+        }
+      />
+      <Route
+        path="/myblogs"
+        element={
+          <LazyLoad>
+            <MyBlogs />
+          </LazyLoad>
+        }
+      />
+      <Route
+        path="/blogs/:blogID"
+        element={
+          <LazyLoad>
+            <SingleBlog />
+          </LazyLoad>
+        }
+      />
+      <Route
+        path="/edit/:blogID"
+        element={
+          <LazyLoad>
+            <EditBlog />
+          </LazyLoad>
+        }
+      />
       <Route
         path="/admin"
         element={
-          <PrivateRoute path="/admin" roles={["admin"]}>
-            <UsersList />
-          </PrivateRoute>
+          <LazyLoad>
+            <PrivateRoute path="/admin" roles={["admin"]}>
+              <UsersList />
+            </PrivateRoute>
+          </LazyLoad>
         }
       />
+      <Route path="/myprofile" element={<>My profile Page Coming soon</>} />
     </Route>
   )
 );
